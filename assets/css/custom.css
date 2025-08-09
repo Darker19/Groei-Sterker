@@ -5,7 +5,8 @@
 
 :root{
   /* Design tokens */
-  --color-primary: #a2a6ac;
+  --color-primary: #ffdecc;
+  --color-secondary: #f9b18a;
   --color-text: #222222;
   --color-muted: #6b7280;
   --color-bg: #ffffff;
@@ -86,4 +87,8 @@ a:hover{ text-decoration: underline; }
 /* ========== Optioneel: smooth scroll offset voor fixed navbars ========== */
 :target {
   scroll-margin-top: 80px;
+}
+
+.cid-uThSbHawYh .container-fluid{
+  background-color: #f9b18a;
 }
