@@ -1,0 +1,28 @@
+@font-face {
+   font-family: 'Special Gothic';
+   font-style: normal;
+   font-display: swap;
+   font-weight: 500;
+   src: url('file:///Users/yalmar/Library/Mobile%20Documents/com~apple~CloudDocs/Yalmar.nl/Clients/Groei%20Sterker/Site%20-%20v0.1/fonts/Special Gothic/500.ttf') format('truetype');
+}
+@font-face {
+   font-family: 'Special Gothic';
+   font-style: normal;
+   font-display: swap;
+   font-weight: 600;
+   src: url('file:///Users/yalmar/Library/Mobile%20Documents/com~apple~CloudDocs/Yalmar.nl/Clients/Groei%20Sterker/Site%20-%20v0.1/fonts/Special Gothic/600.ttf') format('truetype');
+}
+@font-face {
+   font-family: 'Special Gothic';
+   font-style: normal;
+   font-display: swap;
+   font-weight: 700;
+   src: url('file:///Users/yalmar/Library/Mobile%20Documents/com~apple~CloudDocs/Yalmar.nl/Clients/Groei%20Sterker/Site%20-%20v0.1/fonts/Special Gothic/700.ttf') format('truetype');
+}
+@font-face {
+   font-family: 'Special Gothic';
+   font-style: regular;
+   font-display: swap;
+   font-weight: 400;
+   src: url('file:///Users/yalmar/Library/Mobile%20Documents/com~apple~CloudDocs/Yalmar.nl/Clients/Groei%20Sterker/Site%20-%20v0.1/fonts/Special Gothic/regular.ttf') format('truetype');
+}

@@ -1,0 +1,89 @@
+/* ========== Custom Theme (starter) ==========
+   Alles wat je aanpast, doe je hier. Niet in vendor files.
+   Laat deze file NA het framework inladen in je HTML.
+================================================ */
+
+:root{
+  /* Design tokens */
+  --color-primary: #a2a6ac;
+  --color-text: #222222;
+  --color-muted: #6b7280;
+  --color-bg: #ffffff;
+  --radius: 12px;
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Basis */
+html, body{
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+img{ max-width:100%; height:auto; }
+a{ text-decoration: none; }
+a:hover{ text-decoration: underline; }
+
+/* Toegankelijkheid: duidelijke focus state */
+:focus-visible{
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Utilities */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* ========== Framework overrides ========== */
+/* Voorbeeld: Bootstrap knoppen */
+.btn-primary{
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  border-radius: var(--radius);
+}
+.card{ border-radius: var(--radius); }
+
+/* Nav voorbeelden */
+.navbar-brand { font-weight: 700; }
+.nav-link { padding: .5rem .75rem; }
+
+/* ========== Eigen componenten (BEM) ========== */
+.hero{
+  padding: clamp(2rem, 5vw, 5rem) 1rem;
+  border-radius: var(--radius);
+}
+.hero__title{
+  margin: 0 0 var(--space-2);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.1;
+}
+.hero__text{
+  color: var(--color-muted);
+  margin-bottom: var(--space-3);
+}
+.hero__cta{
+  margin-top: var(--space-2);
+}
+
+/* ========== Responsiveness ========== */
+@media (min-width: 768px){
+  .container--narrow{ max-width: 760px; margin-inline: auto; }
+}
+@media (min-width: 1200px){
+  .container--narrow{ max-width: 960px; }
+}
+
+/* ========== Optioneel: smooth scroll offset voor fixed navbars ========== */
+:target {
+  scroll-margin-top: 80px;
+}
