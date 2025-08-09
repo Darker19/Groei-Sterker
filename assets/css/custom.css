@@ -88,7 +88,55 @@ a:hover{ text-decoration: underline; }
 :target {
   scroll-margin-top: 80px;
 }
-
+/* ========== Aanpassing aan kleur menu bar ========== */
 .cid-uThSbHawYh .container-fluid{
   background-color: #f9b18a;
+
+}
+/* ========== Aanpassing Openingstijden ========== */
+.openings-container {
+  background: #ffd0b6;
+  border-radius: 50px;
+  width: 300px;
+  padding-left: 25px;   /* lowercase */
+  padding-bottom: 10px;
+  padding-right: 30px;
+}
+
+/* Table basics */
+.openings-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.openings-container th,
+.openings-container td {
+  text-align: left;
+  color: black;
+  font-size: 1rem;
+  /* padding: 6px 8px;          gives breathing room */
+  vertical-align: middle;    /* proper vertical centering */
+}
+
+/* First column (icon) */
+.openings-container td:first-child {
+  width: 24px;
+  text-align: center;        /* center the icon horizontally */
+}
+
+/* Today highlight */
+.openings-container tr.highlight {
+  /* background: #fff6c4;       subtle background */
+  font-weight: 700;
+}
+
+/* Icon itself */
+.day-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;     /* aligns with text if they share a cell */
+  /* margin-right only matters if icon and text are in SAME cell */
+  margin-right: 5px;
 }
