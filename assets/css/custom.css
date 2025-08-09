@@ -91,8 +91,52 @@ a:hover{ text-decoration: underline; }
 /* ========== Aanpassing aan kleur menu bar ========== */
 .cid-uThSbHawYh .container-fluid{
   background-color: #f9b18a;
-
+  border-color: #ffdecc;
 }
+/* ========== Aanpassing aan hamburger menu bar ========== */
+.menu .navbar-toggler .hamburger span {
+  background: #ffdecc !important;   /* stripe color */
+}
+.menu .navbar-toggler:not(.collapsed) .hamburger span {
+  background: #ffdecc !important;   /* same when open */
+}
+
+/* Optional: pill background of the button */
+.menu .navbar-toggler {
+  border-color: transparent;
+}
+
+/* Mobile (below lg) */
+@media (max-width: 991.98px) {
+  .cid-uThSbHawYh .navbar-collapse {
+    background: #ffdecc;        /* mobile menu background */
+    border: 2px solid #f9b18a;         /* <-- border color */
+    border-radius: 16px;               /* optional rounding */
+  }
+}
+
+/* Desktop (lg and up) */
+@media (min-width: 992px) {
+  .cid-uThSbHawYh .navbar-collapse {
+    background: transparent !important;  /* reset for desktop */
+  }
+}
+
+  #menu01-4a .dropdown-item {
+    display: block;
+    padding: .6rem 1rem;
+    background: #ffdecc;
+  }
+  #menu01-4a .dropdown-item:hover,
+  #menu01-4a .dropdown-item:focus {
+    background: #f9b18a;
+    /* margin-left: -5px !important; */
+    padding-left: 10px !important;    /* keep text aligned */
+  }
+
+/* .cid-uThSbHawYh .navbar-collapse {
+  background-color: #ffdecc;
+} */
 /* ========== Aanpassing Openingstijden ========== */
 .openings-container {
   background: #ffd0b6;
@@ -139,4 +183,51 @@ a:hover{ text-decoration: underline; }
   vertical-align: middle;     /* aligns with text if they share a cell */
   /* margin-right only matters if icon and text are in SAME cell */
   margin-right: 5px;
+}
+
+/* hamburger */
+.menu .navbar-toggler .hamburger span {
+  background: #ffdecc !important;   /* stripe color */
+}
+.menu .navbar-toggler:not(.collapsed) .hamburger span {
+  background: #ffdecc !important;   /* same when open */
+}
+
+/* Optional: pill background of the button */
+.menu .navbar-toggler {
+  border-color: transparent;
+}
+
+/* dropdown menu desktop */
+
+/* Desktop only */
+@media (min-width: 992px) {
+  /* Panel */
+
+  /* Each item gets its own border */
+  #menu01-4a .dropdown-menu .dropdown-item {
+    border: 1px solid #f9b18a;
+  }
+}
+
+/* effect onder menu items */
+
+@media (min-width: 992px) {
+  #menu01-4a .navbar-nav .nav-item::before,
+  #menu01-4a .navbar-nav .nav-item::after {
+    background-color: #ffd0b6 !important;  /* ← your color */
+    /* optional tweaks: */
+    height: 3px;                            /* thickness (default was 5px) */
+    transition: width .35s ease;            /* slow the sweep a bit */
+  }
+}
+
+/* Remove underline on links in navbar */
+@media (min-width: 992px) {
+  #menu01-4a .navbar-nav .nav-link,
+  #menu01-4a .navbar-nav .nav-link:hover,
+  #menu01-4a .navbar-nav .nav-link:focus,
+  #menu01-4a .navbar-nav .nav-link:active {
+    text-decoration: none !important;
+  }
 }
