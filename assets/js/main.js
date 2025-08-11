@@ -60,7 +60,7 @@
           const iconCel = row.cells[0];
           if (iconCel && !iconCel.querySelector('.day-icon')) {
             const icon = document.createElement('img');
-            icon.src = 'assets/images/borboletas-butterfly.gif'; // pas aan aan jouw pad
+            icon.src = 'assets/images/Vlinder_flap_recolored.gif'; // pas aan aan jouw pad
             icon.alt = 'Vandaag';
             icon.className = 'day-icon';
             icon.loading = 'lazy';
