@@ -90,15 +90,15 @@ a:hover{ text-decoration: underline; }
 }
 /* ========== Aanpassing aan kleur menu bar ========== */
 .cid-uThSbHawYh .container-fluid{
-  background-color: #f9b18a;
-  border-color: #ffdecc;
+  background-color: #ffdecc;
+  border-color: #f9b18a;
 }
 /* ========== Aanpassing aan hamburger menu bar ========== */
 .menu .navbar-toggler .hamburger span {
-  background: #ffdecc !important;   /* stripe color */
+  background: #f9b18a !important;   /* stripe color */
 }
 .menu .navbar-toggler:not(.collapsed) .hamburger span {
-  background: #ffdecc !important;   /* same when open */
+  background: #f9b18a !important;   /* same when open */
 }
 
 /* Optional: pill background of the button */
@@ -133,6 +133,14 @@ a:hover{ text-decoration: underline; }
     /* margin-left: -5px !important; */
     padding-left: 10px !important;    /* keep text aligned */
   }
+
+  /* hamburger */
+.menu .navbar-toggler .hamburger span {
+  background: #f9b18a !important;   /* stripe color */
+}
+.menu .navbar-toggler:not(.collapsed) .hamburger span {
+  background: #f9b18a !important;   /* same when open */
+}
 
 /* .cid-uThSbHawYh .navbar-collapse {
   background-color: #ffdecc;
@@ -185,13 +193,6 @@ a:hover{ text-decoration: underline; }
   margin-right: 5px;
 }
 
-/* hamburger */
-.menu .navbar-toggler .hamburger span {
-  background: #ffdecc !important;   /* stripe color */
-}
-.menu .navbar-toggler:not(.collapsed) .hamburger span {
-  background: #ffdecc !important;   /* same when open */
-}
 
 /* Optional: pill background of the button */
 .menu .navbar-toggler {
@@ -215,7 +216,7 @@ a:hover{ text-decoration: underline; }
 @media (min-width: 992px) {
   #menu01-4a .navbar-nav .nav-item::before,
   #menu01-4a .navbar-nav .nav-item::after {
-    background-color: #ffd0b6 !important;  /* ← your color */
+    background-color: #f9b18a !important;  /* ← your color */
     /* optional tweaks: */
     height: 3px;                            /* thickness (default was 5px) */
     transition: width .35s ease;            /* slow the sweep a bit */
