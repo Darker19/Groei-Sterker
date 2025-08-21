@@ -3,8 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const mount = document.getElementById('site-footer');
   if (!mount) return;
 
-  const version = 'v1';
-  const url = `partials/footer.html?${version}`;
+  const version = 'v=1'; // beter geschreven querystring
+
+  // Detecteer base path ("/repo" bij project pages, "" bij user pages)
+  const parts = location.pathname.split('/').filter(Boolean);
+  const repoBase = (location.hostname.endsWith('.github.io') && parts.length > 0)
+    ? `/${parts[0]}`   // bijv. "/mijnrepo"
+    : '';
+
+  const url = `${repoBase}/partials/footer.html?${version}`;
 
   fetch(url, { cache: 'no-cache' })
     .then(res => {
@@ -13,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(html => {
       mount.innerHTML = html;
-      // 🔔 Laat aan de rest weten dat de footer er staat
       document.dispatchEvent(new Event('footer:loaded'));
     })
     .catch(err => {
@@ -21,4 +27,3 @@ document.addEventListener('DOMContentLoaded', () => {
       mount.innerHTML = '<p style="text-align:center;opacity:.7">Footer kon niet geladen worden.</p>';
     });
 });
-// Zorg dat deze script pas draait als de DOM klaar is
