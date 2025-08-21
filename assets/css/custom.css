@@ -252,11 +252,15 @@ a:hover{ text-decoration: underline; }
   letter-spacing: 1px;
   line-height: 1;
 }
-
+#quotes { 
+  background-color: #fbf9ed;
+}
 
 #article03-2m {
   padding-top: 125px;
   align-content: center;
+  border: none;
+  background-color: #ffdecc;
 }
 
 /* Tekst rond de foto */
@@ -282,11 +286,14 @@ a:hover{ text-decoration: underline; }
   }
 }
 
-.card {
+/* behandelingen */
+
+#list1-2z .card {
   border: 2px solid #f9b18a;   /* rode rand rondom alles */
   overflow: hidden;            /* zodat de rand ook langs de foto doorloopt */
 }
-.card,
+
+#list1-2z .card,
 .card-header,
 .card-body,
 .panel-title,
@@ -298,18 +305,26 @@ button.panel-title {
   padding-bottom: 0px;
 }
 
-.card img {
+#list1-2z .card img {
   display: block;
   width: 100%;
   height: auto;
   margin: 0;
 }
 
-.panel-title h6 {
+#list1-2z .panel-title h6 {
   margin: 0;               /* verwijder default margins */
   flex: 1;                 /* titel neemt beschikbare ruimte */
 }
 
-.panel-title .sign {
+#list1-2z .panel-title .sign {
   margin-left: 1rem;       /* ruimte tussen tekst en icoon */
+}
+/* kleuren blokken */
+#title1-2p {
+  background-color: #f9b18a;
+}
+
+#features11-2q {
+  background-color: #ffdecc;
 }
