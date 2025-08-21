@@ -242,3 +242,19 @@ a:hover{ text-decoration: underline; }
   height: 50px;
   margin-top: 0.78rem;
 }
+
+
+/* Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */ 
+.quotes {
+  font-family: 'tangerine', sans-serif;
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+
+#article03-2m {
+  padding-top: 125px;
+  align-content: center;
+}
