@@ -463,16 +463,6 @@ button.panel-title {
 }
 
 
-
-/* Hover (matcht je huidige effect, maar in jouw kleuren) */
-#features11-2q .imageContainer:hover .tlv__pointer,
-#features11-2q .imageContainer-2:hover .tlv__pointer-2{
-  background-color: none;
-  border-color: none;
-  transform: scale(1.2);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--spine-core) 20%, transparent);
-}
-
 /* Optioneel: minder slinger op mobiel */
 @media (max-width: 767.98px){
   #features11-2q .spine-core,
@@ -500,7 +490,8 @@ button.panel-title {
 }
 /* === Bolletjes (rechts en links) === */
 #features11-2q .tlv__pointer,
-#features11-2q .tlv__pointer-2{
+#features11-2q .tlv__pointer-2,#features11-2q .imageContainer:hover .tlv__pointer,
+#features11-2q .imageContainer-2:hover .tlv__pointer-2{
   width:16px; height:16px; border-radius:50%;
   background:none;
   border:none;
