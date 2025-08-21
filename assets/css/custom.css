@@ -282,4 +282,34 @@ a:hover{ text-decoration: underline; }
   }
 }
 
-article03 progressm5 cid-uThIt840Ej
+.card {
+  border: 2px solid #f9b18a;   /* rode rand rondom alles */
+  overflow: hidden;            /* zodat de rand ook langs de foto doorloopt */
+}
+.card,
+.card-header,
+.card-body,
+.panel-title,
+button.panel-title {
+  border-radius: 35px !important; /* forceer rechte hoeken */
+   display: flex;
+  align-items: left;     /* verticaal in het midden */
+  padding-top: 15px;        /* ruimte boven de titel */
+  padding-bottom: 0px;
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.panel-title h6 {
+  margin: 0;               /* verwijder default margins */
+  flex: 1;                 /* titel neemt beschikbare ruimte */
+}
+
+.panel-title .sign {
+  margin-left: 1rem;       /* ruimte tussen tekst en icoon */
+}
