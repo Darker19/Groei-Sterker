@@ -90,7 +90,7 @@ a:hover{ text-decoration: underline; }
 }
 /* ========== Aanpassing aan kleur menu bar ========== */
 .cid-uThSbHawYh .container-fluid{
-  background-color: #ffdecc;
+  background-color: #ffd0b6;
   border-color: #f9b18a;
 }
 /* ========== Aanpassing aan hamburger menu bar ========== */
@@ -109,7 +109,7 @@ a:hover{ text-decoration: underline; }
 /* Mobile (below lg) */
 @media (max-width: 991.98px) {
   .cid-uThSbHawYh .navbar-collapse {
-    background: #ffdecc;        /* mobile menu background */
+    background: #ffd0b6;        /* mobile menu background */
     border: 2px solid #f9b18a;         /* <-- border color */
     border-radius: 16px;               /* optional rounding */
   }
@@ -125,7 +125,7 @@ a:hover{ text-decoration: underline; }
   #menu01-4a .dropdown-item {
     display: block;
     padding: .6rem 1rem;
-    background: #ffdecc;
+    background: #ffd0b6;
   }
   #menu01-4a .dropdown-item:hover,
   #menu01-4a .dropdown-item:focus {
