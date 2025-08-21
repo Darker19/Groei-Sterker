@@ -18,7 +18,7 @@ document.addEventListener('footer:loaded', () => {
       const iconCel = row.cells[0];
       if (iconCel && !iconCel.querySelector('.day-icon')) {
         const icon = document.createElement('img');
-        icon.src = '/assets/images/Vlinder_flap_recolored.gif'; // vanaf root
+        icon.src = 'assets/images/Vlinder_flap_recolored.gif'; // vanaf root
         icon.alt = 'Vandaag';
         icon.className = 'day-icon';
         icon.loading = 'lazy';

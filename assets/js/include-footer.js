@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!mount) return;
 
   const version = 'v1';
-  const url = `/partials/footer.html?${version}`;
+  const url = `partials/footer.html?${version}`;
 
   fetch(url, { cache: 'no-cache' })
     .then(res => {
