@@ -387,14 +387,93 @@ button.panel-title {
 }
 
 /* kleuren blokken */
+
+
+/* Midden */
 #title1-2p, #features11-2q {
   background-color: #ffd0b6;
 }
-
+/* Donker */
 #title2-2v {
   background-color: #f9b18a;
 }
-
+/* Licht */
 #title2-2t {
   background-color: #ffdecc;
+}
+
+
+
+/* Spine */
+#features11-2q .container-fluid::before { content: none !important; }
+/* Scope op jouw sectie */
+#features11-2q .container-fluid {
+  position: relative; /* anker voor absolute SVG */
+}
+
+/* Zet de SVG achter de content en laat 'm meeschalen in hoogte */
+#features11-2q .spine-svg {
+  position: absolute;
+  inset: 0;           /* top/right/bottom/left: 0 */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;         /* achter alles */
+}
+
+/* Kleuren / stijl van de ruggengraat */
+:root{
+  --spine-core:    #ffdecc;  /* wervels */
+  --spine-outline: #f9b18a;  /* subtiele gloed */
+}
+
+/* subtiele gloed/omtrek */
+#features11-2q .spine-outline{
+  fill: none;
+  stroke: var(--spine-outline);
+  stroke-width: 6;
+  opacity: .22;
+  stroke-linecap: round;
+}
+
+/* “wervels” als ronde streepjes op de curve */
+#features11-2q .spine-core{
+  fill: none;
+  stroke: var(--spine-core);
+  stroke-width: 3;          /* dikte van de wervel */
+  stroke-linecap: round;    /* afgeronde uiteinden -> pillen */
+  stroke-dasharray: 18 16;  /* lengte wervel, ruimte tussen wervels */
+}
+
+/* Zorg dat je content boven de SVG ligt */
+#features11-2q .container-fluid > :not(.spine-svg){
+  position: relative;
+  z-index: 1;
+}
+
+#features11-2q .tlv__pointer,
+#features11-2q .tlv__pointer-2{
+  width: 16px; height: 16px; border-radius: 50%;
+  background-color: var(--spine-core);
+  border: 3px solid var(--spine-outline);
+  position: relative; z-index: 2;
+  transition: transform .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+/* Hover (matcht je huidige effect, maar in jouw kleuren) */
+#features11-2q .imageContainer:hover .tlv__pointer,
+#features11-2q .imageContainer-2:hover .tlv__pointer-2{
+  background-color: var(--spine-outline);
+  border-color: var(--spine-core);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--spine-core) 20%, transparent);
+}
+
+/* Optioneel: minder slinger op mobiel */
+@media (max-width: 767.98px){
+  #features11-2q .spine-core,
+  #features11-2q .spine-outline{
+    stroke-width: 5;
+    stroke-dasharray: 14 14;
+  }
 }
