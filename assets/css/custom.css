@@ -462,20 +462,13 @@ button.panel-title {
   z-index: 1;
 }
 
-#features11-2q .tlv__pointer,
-#features11-2q .tlv__pointer-2{
-  width: 16px; height: 16px; border-radius: 50%;
-  background-color: var(--spine-core);
-  border: 3px solid var(--spine-outline);
-  position: relative; z-index: 2;
-  transition: transform .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
-}
+
 
 /* Hover (matcht je huidige effect, maar in jouw kleuren) */
 #features11-2q .imageContainer:hover .tlv__pointer,
 #features11-2q .imageContainer-2:hover .tlv__pointer-2{
-  background-color: var(--spine-outline);
-  border-color: var(--spine-core);
+  background-color: none;
+  border-color: none;
   transform: scale(1.2);
   box-shadow: 0 0 0 6px color-mix(in srgb, var(--spine-core) 20%, transparent);
 }
@@ -509,8 +502,8 @@ button.panel-title {
 #features11-2q .tlv__pointer,
 #features11-2q .tlv__pointer-2{
   width:16px; height:16px; border-radius:50%;
-  background:var(--spine-core);
-  border:3px solid var(--spine-outline);
+  background:none;
+  border:none;
   position:relative; z-index:1;
   box-shadow:none;                          /* haal eventuele glows weg */
 }
