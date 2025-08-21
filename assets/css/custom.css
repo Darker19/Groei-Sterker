@@ -298,7 +298,7 @@ a:hover {
 /* Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
 .quotes {
   font-family: 'tangerine', sans-serif;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 900;
   letter-spacing: 1px;
   line-height: 1;
@@ -344,12 +344,23 @@ a:hover {
 }
 
 /* behandelingen */
-
+.mbr-section-title.mb-2.mbr-fonts-style.display-5 {
+  text-align: center;
+}
 #list1-2z .card {
-  border: 2px solid #f9b18a;
+  border: 2px solid #ffdecc;
   /* rode rand rondom alles */
   overflow: hidden;
   /* zodat de rand ook langs de foto doorloopt */
+  background-color: #ffd0b6;
+}
+
+.mbr-fonts-style.panel-text.display-4 {
+  font-family: 'Special Gothic', sans-serif;
+  font-weight: 1.3;
+  /* vetgedrukt */
+  font-size: 1.1rem;
+  /* grotere tekst */
 }
 
 #list1-2z .card,
@@ -362,7 +373,7 @@ button.panel-title {
   display: flex;
   align-items: left;
   /* verticaal in het midden */
-  padding-top: 15px;
+  padding-top: 7.5px;
   /* ruimte boven de titel */
   padding-bottom: 0px;
 }
@@ -390,11 +401,11 @@ button.panel-title {
 
 
 /* Midden */
-#title1-2p, #features11-2q {
+#title1-2p, #features11-2q, #image2-2y, #title2-32 {
   background-color: #ffd0b6;
 }
 /* Donker */
-#title2-2v {
+#title2-2v, #list1-2z {
   background-color: #f9b18a;
 }
 /* Licht */
@@ -477,3 +488,48 @@ button.panel-title {
     stroke-dasharray: 14 14;
   }
 }
+
+/* Afbeelding cirkels (img-wrapper) in spine stijl */
+#features11-2q .img-wrapper,
+#features11-2q .img-wrapper-2 {
+  border: 4px solid var(--spine-core);
+  border-radius: 50%;
+  padding: 6px; /* witruimte rond de afbeelding */
+  background-color: #fff; /* witte achtergrond in de cirkel */
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+/* Hover effect: match met bullets */
+#features11-2q .imageContainer:hover .img-wrapper,
+#features11-2q .imageContainer-2:hover .img-wrapper-2 {
+  border-color: var(--spine-outline);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--spine-core) 20%, transparent);
+}
+/* === Bolletjes (rechts en links) === */
+#features11-2q .tlv__pointer,
+#features11-2q .tlv__pointer-2{
+  width:16px; height:16px; border-radius:50%;
+  background:var(--spine-core);
+  border:3px solid var(--spine-outline);
+  position:relative; z-index:1;
+  box-shadow:none;                          /* haal eventuele glows weg */
+}
+
+/* Sommige thema’s tekenen een extra ring via ::before — uitzetten */
+#features11-2q .tlv__pointer::before,
+#features11-2q .tlv__pointer-2::before,
+#features11-2q .tlv__pointer::after,
+#features11-2q .tlv__pointer-2::after{
+  content:none;
+}
+.cid-uThIzjqaZ2 .tlv__item-first, .cid-uThIzjqaZ2 .tlv__item-first2{
+  background: none;
+  
+}
+
+
+/* Text kleur */
+.cid-uThINM6q35 .mbr-text{
+  color: #454545;
+}
+
