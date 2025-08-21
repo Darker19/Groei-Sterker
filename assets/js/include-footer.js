@@ -1,15 +1,15 @@
-// /assets/js/include-footer.js
 document.addEventListener('DOMContentLoaded', () => {
   const mount = document.getElementById('site-footer');
   if (!mount) return;
 
-  const version = 'v=1'; // beter geschreven querystring
+  const version = 'v=1';
 
-  // Detecteer base path ("/repo" bij project pages, "" bij user pages)
+  // detecteer of we in een project site zitten
   const parts = location.pathname.split('/').filter(Boolean);
-  const repoBase = (location.hostname.endsWith('.github.io') && parts.length > 0)
-    ? `/${parts[0]}`   // bijv. "/mijnrepo"
-    : '';
+  const repoBase =
+    location.hostname.endsWith('.github.io') && parts.length > 0
+      ? `/${parts[0]}`
+      : '';
 
   const url = `${repoBase}/partials/footer.html?${version}`;
 
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(err => {
       console.error('Footer laden mislukt:', err);
-      mount.innerHTML = '<p style="text-align:center;opacity:.7">Footer kon niet geladen worden.</p>';
+      mount.innerHTML =
+        '<p style="text-align:center;opacity:.7">Footer kon niet geladen worden.</p>';
     });
 });
