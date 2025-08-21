@@ -258,3 +258,28 @@ a:hover{ text-decoration: underline; }
   padding-top: 125px;
   align-content: center;
 }
+
+/* Tekst rond de foto */
+.text-wrapper .wrap-img {
+  float: right;                         /* of left voor links */
+  width: clamp(300px, 50%, 560px);      /* responsieve breedte */
+  margin: 0 0 1rem 1.25rem;             /* ruimte tussen foto en tekst */
+  border-radius: 16px;
+  display: block;
+
+  /* Laat de tekst de afgeronde hoeken volgen (modern, werkt in meeste browsers) */
+  shape-outside: inset(0 round 16px);
+  -webkit-shape-outside: inset(0 round 16px); /* Safari */
+  object-fit: cover;                     /* mooi croppen indien nodig */
+}
+
+/* Op mobiel: foto boven de tekst, volle breedte */
+@media (max-width: 768px) {
+  .text-wrapper .wrap-img {
+    float: none;
+    width: 100%;
+    margin: 0 0 1rem 0;
+  }
+}
+
+article03 progressm5 cid-uThIt840Ej
