@@ -295,18 +295,33 @@ a:hover {
 }
 
 
-/* Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
+/* start Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
 .quotes {
   font-family: 'tangerine', sans-serif;
   font-size: 2rem;
   font-weight: 900;
   letter-spacing: 1px;
   line-height: 1;
+  
 }
 
-#quotes {
+#quotes{
   background-color: #fbf9ed;
+  padding: 0 !important;  
 }
+#quotes .col-md-12, .col-12 {
+  display: flex;                     /* verticaal + horizontaal centreren */
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;                /* gelijke binnenruimte */
+  min-height: 140px;                 /* optioneel: geeft wat hoogte aan het kleurvlak */
+}
+#quotes p.quotes {
+  margin: 0;                         /* verwijder p-marges */
+  line-height: 1.1;                  /* compacter, naar smaak */
+}
+
+/* end Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
 
 #article03-2m {
   padding-top: 125px;
