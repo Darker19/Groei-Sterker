@@ -647,3 +647,10 @@ button.panel-title {
   background-repeat: no-repeat;
   background-position: 0% 74%;
 }
+
+.logo {
+  transform: scaleX(-1);
+  display: inline-block;
+  height: auto;
+  width: 110px;
+}
