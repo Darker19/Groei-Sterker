@@ -620,16 +620,6 @@ button.panel-title {
   display: flex;
 }
 
-.Vlinder-h1 {
-  position: absolute;
-  top: 400px;
-  /* schuif naar boven */
-  left: 115px;
-  /* schuif horizontaal tot boven de i */
-  width: 25px;
-  height: auto;
-  border-radius: 0px !important;
-}
 
 .mbr-section-title .mbr-fonts-style.mb-4.display-1 {
   position: relative;
