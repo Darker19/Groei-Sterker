@@ -568,3 +568,18 @@ button.panel-title {
 .cid-uThINM6q35 .mbr-text {
   color: #454545;
 }
+
+/* Zorggroep logo */
+.logo-zorggroep {
+  display: block;
+  /* Zorgt dat hij als blok wordt gezien */
+  width: 80%;
+  /* Pas dit aan naar dezelfde breedte als de andere logo’s */
+  height: auto;
+  /* Hoogte automatisch */
+  margin: 0 auto;
+  /* Centreert horizontaal */
+  object-fit: contain;
+  /* Zorgt dat het beeld niet vervormt */
+  border-radius: 0px !important;
+}
