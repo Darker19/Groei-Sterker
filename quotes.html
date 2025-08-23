@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="nl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Font Sampler – Groei Sterker</title>
+    <!-- Google Fonts: voeg hier alleen de fonts toe die je wilt tonen -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=League+Script&family=Passions+Conflict&family=Sofia&family=Tangerine:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --card-radius: 16px;
+            --card-padding: 16px;
+            --grid-gap: 16px;
+            --sample-size: 40px;
+            /* wordt live aangepast via slider */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font: 16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            background: #fbf9ed;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+            background: rgba(11, 16, 32, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: .5px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .controls .row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: #e9eef8;
+        }
+
+        input[type="range"] {
+            width: 220px;
+        }
+
+        .hint {
+            opacity: .8;
+            font-size: 12px;
+        }
+
+        button {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.06);
+            color: #e9eef8;
+            border-radius: 12px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--grid-gap);
+            padding: 20px 16px 40px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, #fbf9ed);
+            border: 1px solid rgba(235, 8, 8, 0.08);
+            border-radius: var(--card-radius);
+            padding: var(--card-padding);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .meta .name {
+            font-weight: 600;
+            letter-spacing: .3px;
+        }
+
+        .meta .fallback {
+            font-size: 12px;
+            opacity: .7;
+        }
+
+        .sample {
+            margin-top: 10px;
+            font-size: var(--sample-size);
+            line-height: 1.1;
+            word-break: break-word;
+        }
+
+        .weights {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            font-size: 12px;
+            padding: 6px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            opacity: .9;
+        }
+
+        footer {
+            opacity: .7;
+            font-size: 12px;
+            padding: 0 16px 24px;
+        }
+
+        a {
+            color: #a9c7ff;
+        }
+
+        /* Font utility classes */
+        .font-tangerine {
+            font-family: 'Tangerine', cursive;
+        }
+
+        .font-imperial {
+            font-family: 'Imperial Script', cursive;
+        }
+
+        .font-passions {
+            font-family: 'Passions Conflict', cursive;
+        }
+
+        .font-sofia {
+            font-family: 'Sofia', cursive;
+        }
+
+        .font-league {
+            font-family: 'League Script', cursive;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="wrap">
+            <h1>Visuele fonts‑presentatie</h1>
+            <div class="controls">
+                <input id="textInput" type="text"
+                    value="Groei Sterker is er voor kinderen die een steuntje in de rug nodig hebben, om sterker te worden in hun lichaam, hun zelfvertrouwen en hun ontwikkeling. En voor ouders die zoeken naar een therapeut die meedenkt, meeleeft én doorvraagt."
+                    aria-label="Voorbeeldtekst" />
+                <div class="row">
+                    <label for="sizeRange">Tekstgrootte</label>
+                    <input id="sizeRange" type="range" min="20" max="120" step="1" value="40" />
+                    <button id="resetBtn" type="button">Reset</button>
+                </div>
+            </div>
+            <div class="hint">Tip: verander de voorbeeldtekst of schuif de grootte. Voeg fonts toe in de &lt;head&gt; en
+                kopieer één kaart als sjabloon.</div>
+        </div>
+    </header>
+
+    <main class="list wrap">
+        <!-- Tangerine -->
+        <section class="card">
+            <div class="meta">
+                <div class="name">Tangerine</div>
+                <div class="fallback">fallback: cursive</div>
+            </div>
+            <div class="weights">
+                <span class="chip">400</span>
+                <span class="chip">700</span>
+            </div>
+            <div class="sample font-tangerine">Groei Sterker Kinderfysiotherapie – Hoofddorp</div>
+        </section>
+
+        <!-- Imperial Script -->
+        <section class="card">
+            <div class="meta">
+                <div class="name">Imperial Script</div>
+                <div class="fallback">fallback: cursive</div>
+            </div>
+            <div class="weights">
+                <span class="chip">400</span>
+            </div>
+            <div class="sample font-imperial">Groei Sterker Kinderfysiotherapie – Hoofddorp</div>
+        </section>
+
+        <!-- Passions Conflict -->
+        <section class="card">
+            <div class="meta">
+                <div class="name">Passions Conflict</div>
+                <div class="fallback">fallback: cursive</div>
+            </div>
+            <div class="weights">
+                <span class="chip">400</span>
+            </div>
+            <div class="sample font-passions">Groei Sterker Kinderfysiotherapie – Hoofddorp</div>
+        </section>
+
+        <!-- Sofia -->
+        <section class="card">
+            <div class="meta">
+                <div class="name">Sofia</div>
+                <div class="fallback">fallback: cursive</div>
+            </div>
+            <div class="weights">
+                <span class="chip">400</span>
+            </div>
+            <div class="sample font-sofia">Groei Sterker Kinderfysiotherapie – Hoofddorp</div>
+        </section>
+
+        <!-- League Script -->
+        <section class="card">
+            <div class="meta">
+                <div class="name">League Script</div>
+                <div class="fallback">fallback: cursive</div>
+            </div>
+            <div class="weights">
+                <span class="chip">400</span>
+            </div>
+            <div class="sample font-league">Groei Sterker Kinderfysiotherapie – Hoofddorp</div>
+        </section>
+
+    </main>
+
+    <footer class="wrap">
+        Beheer fonts via Google Fonts. Verwijder fonts die je niet gebruikt om de pagina licht te houden. |
+        <a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts</a>
+    </footer>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const sizeRange = document.getElementById('sizeRange');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function updateText() {
+            document.querySelectorAll('.sample').forEach(el => el.textContent = textInput.value.trim() || 'Voorbeeldtekst');
+        }
+        function updateSize() {
+            document.documentElement.style.setProperty('--sample-size', sizeRange.value + 'px');
+        }
+        function reset() {
+            textInput.value = 'Groei Sterker Kinderfysiotherapie – Hoofddorp';
+            sizeRange.value = 40;
+            updateText();
+            updateSize();
+        }
+
+        textInput.addEventListener('input', updateText);
+        sizeRange.addEventListener('input', updateSize);
+        resetBtn.addEventListener('click', reset);
+
+        // Initial
+        updateText();
+        updateSize();
+    </script>
+</body>
+
+</html>
