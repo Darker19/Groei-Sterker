@@ -594,7 +594,8 @@ button.panel-title {
 }
 
 
-.navbar-dropdown .navbar-logo img {
+.navbar-dropdown .navbar-logo img,
+.navbar-logo {
   border-radius: 0px !important;
 }
 
@@ -613,4 +614,25 @@ button.panel-title {
 
 .vlinder-wrapper {
   display: flex;
+}
+
+
+.pink {
+  background-size: 100% 0.521em;
+  display: inline;
+  margin: 0 -12px;
+  padding: 0 12px;
+  background-image: linear-gradient(to top, rgba(250, 157, 183, 0.5), rgba(250, 157, 183, 0.5));
+  background-repeat: no-repeat;
+  background-position: 0% 74%;
+}
+
+.yellow {
+  background-size: 100% 0.521em;
+  display: inline;
+  margin: 0 -12px;
+  padding: 0 12px;
+  background-image: linear-gradient(to top, rgba(255, 200, 91, 0.5), rgba(255, 200, 91, 0.5));
+  background-repeat: no-repeat;
+  background-position: 0% 74%;
 }
