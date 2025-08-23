@@ -193,6 +193,7 @@ a:hover {
   /* lowercase */
   padding-bottom: 10px;
   padding-right: 30px;
+  padding-top: 10px;
 }
 
 /* Table basics */
@@ -593,6 +594,9 @@ button.panel-title {
   border-radius: 0px !important;
 }
 
+.social-data {
+  padding-top: 10px;
+}
 
 .navbar-dropdown .navbar-logo img,
 .navbar-logo {
@@ -616,6 +620,23 @@ button.panel-title {
   display: flex;
 }
 
+.Vlinder-h1 {
+  position: absolute;
+  top: 400px;
+  /* schuif naar boven */
+  left: 115px;
+  /* schuif horizontaal tot boven de i */
+  width: 25px;
+  height: auto;
+  border-radius: 0px !important;
+}
+
+.mbr-section-title .mbr-fonts-style.mb-4.display-1 {
+  position: relative;
+  font-family: 'Cal Sans', sans-serif;
+  font-weight: 800;
+  line-height: 1.1;
+}
 
 .pink {
   background-size: 100% 0.521em;
