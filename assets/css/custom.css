@@ -577,9 +577,16 @@ button.panel-title {
   /* Pas dit aan naar dezelfde breedte als de andere logo’s */
   height: auto;
   /* Hoogte automatisch */
-  margin: 0 auto;
-  /* Centreert horizontaal */
   object-fit: contain;
   /* Zorgt dat het beeld niet vervormt */
   border-radius: 0px !important;
+  /* Geen afgeronde hoeken */
+}
+
+.isst {
+  height: 75px;
+  width: 45px;
+  border-radius: 20px;
+  margin: 4px;
+  display: inline-block;
 }
