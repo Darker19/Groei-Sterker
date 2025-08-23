@@ -302,23 +302,31 @@ a:hover {
   font-weight: 900;
   letter-spacing: 1px;
   line-height: 1;
-  
+
 }
 
-#quotes{
+#quotes {
   background-color: #fbf9ed;
-  padding: 0 !important;  
+  padding: 0 !important;
 }
-#quotes .col-md-12, .col-12 {
-  display: flex;                     /* verticaal + horizontaal centreren */
+
+#quotes .col-md-12,
+.col-12 {
+  display: flex;
+  /* verticaal + horizontaal centreren */
   align-items: center;
   justify-content: center;
-  padding: 20px 16px;                /* gelijke binnenruimte */
-  min-height: 140px;                 /* optioneel: geeft wat hoogte aan het kleurvlak */
+  padding: 20px 16px;
+  /* gelijke binnenruimte */
+  min-height: 140px;
+  /* optioneel: geeft wat hoogte aan het kleurvlak */
 }
+
 #quotes p.quotes {
-  margin: 0;                         /* verwijder p-marges */
-  line-height: 1.1;                  /* compacter, naar smaak */
+  margin: 0;
+  /* verwijder p-marges */
+  line-height: 1.1;
+  /* compacter, naar smaak */
 }
 
 /* end Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
@@ -362,6 +370,7 @@ a:hover {
 .mbr-section-title.mb-2.mbr-fonts-style.display-5 {
   text-align: center;
 }
+
 #list1-2z .card {
   border: 2px solid #ffdecc;
   /* rode rand rondom alles */
@@ -416,13 +425,19 @@ button.panel-title {
 
 
 /* Midden */
-#title1-2p, #features11-2q, #image2-2y, #title2-32 {
+#title1-2p,
+#features11-2q,
+#image2-2y,
+#title2-32 {
   background-color: #ffd0b6;
 }
+
 /* Donker */
-#title2-2v, #list1-2z {
+#title2-2v,
+#list1-2z {
   background-color: #f9b18a;
 }
+
 /* Licht */
 #title2-2t {
   background-color: #ffdecc;
@@ -431,30 +446,38 @@ button.panel-title {
 
 
 /* Spine */
-#features11-2q .container-fluid::before { content: none !important; }
+#features11-2q .container-fluid::before {
+  content: none !important;
+}
+
 /* Scope op jouw sectie */
 #features11-2q .container-fluid {
-  position: relative; /* anker voor absolute SVG */
+  position: relative;
+  /* anker voor absolute SVG */
 }
 
 /* Zet de SVG achter de content en laat 'm meeschalen in hoogte */
 #features11-2q .spine-svg {
   position: absolute;
-  inset: 0;           /* top/right/bottom/left: 0 */
+  inset: 0;
+  /* top/right/bottom/left: 0 */
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 0;         /* achter alles */
+  z-index: 0;
+  /* achter alles */
 }
 
 /* Kleuren / stijl van de ruggengraat */
-:root{
-  --spine-core:    #ffdecc;  /* wervels */
-  --spine-outline: #f9b18a;  /* subtiele gloed */
+:root {
+  --spine-core: #ffdecc;
+  /* wervels */
+  --spine-outline: #f9b18a;
+  /* subtiele gloed */
 }
 
 /* subtiele gloed/omtrek */
-#features11-2q .spine-outline{
+#features11-2q .spine-outline {
   fill: none;
   stroke: var(--spine-outline);
   stroke-width: 6;
@@ -463,25 +486,29 @@ button.panel-title {
 }
 
 /* “wervels” als ronde streepjes op de curve */
-#features11-2q .spine-core{
+#features11-2q .spine-core {
   fill: none;
   stroke: var(--spine-core);
-  stroke-width: 3;          /* dikte van de wervel */
-  stroke-linecap: round;    /* afgeronde uiteinden -> pillen */
-  stroke-dasharray: 18 16;  /* lengte wervel, ruimte tussen wervels */
+  stroke-width: 3;
+  /* dikte van de wervel */
+  stroke-linecap: round;
+  /* afgeronde uiteinden -> pillen */
+  stroke-dasharray: 18 16;
+  /* lengte wervel, ruimte tussen wervels */
 }
 
 /* Zorg dat je content boven de SVG ligt */
-#features11-2q .container-fluid > :not(.spine-svg){
+#features11-2q .container-fluid> :not(.spine-svg) {
   position: relative;
   z-index: 1;
 }
 
 
 /* Optioneel: minder slinger op mobiel */
-@media (max-width: 767.98px){
+@media (max-width: 767.98px) {
+
   #features11-2q .spine-core,
-  #features11-2q .spine-outline{
+  #features11-2q .spine-outline {
     stroke-width: 5;
     stroke-dasharray: 14 14;
   }
@@ -492,8 +519,10 @@ button.panel-title {
 #features11-2q .img-wrapper-2 {
   border: 4px solid var(--spine-core);
   border-radius: 50%;
-  padding: 6px; /* witruimte rond de afbeelding */
-  background-color: #fff; /* witte achtergrond in de cirkel */
+  padding: 6px;
+  /* witruimte rond de afbeelding */
+  background-color: #fff;
+  /* witte achtergrond in de cirkel */
   transition: border-color .2s ease, box-shadow .2s ease;
 }
 
@@ -503,32 +532,39 @@ button.panel-title {
   border-color: var(--spine-outline);
   box-shadow: 0 0 0 6px color-mix(in srgb, var(--spine-core) 20%, transparent);
 }
+
 /* === Bolletjes (rechts en links) === */
 #features11-2q .tlv__pointer,
-#features11-2q .tlv__pointer-2,#features11-2q .imageContainer:hover .tlv__pointer,
-#features11-2q .imageContainer-2:hover .tlv__pointer-2{
-  width:16px; height:16px; border-radius:50%;
-  background:none;
-  border:none;
-  position:relative; z-index:1;
-  box-shadow:none;                          /* haal eventuele glows weg */
+#features11-2q .tlv__pointer-2,
+#features11-2q .imageContainer:hover .tlv__pointer,
+#features11-2q .imageContainer-2:hover .tlv__pointer-2 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  position: relative;
+  z-index: 1;
+  box-shadow: none;
+  /* haal eventuele glows weg */
 }
 
 /* Sommige thema’s tekenen een extra ring via ::before — uitzetten */
 #features11-2q .tlv__pointer::before,
 #features11-2q .tlv__pointer-2::before,
 #features11-2q .tlv__pointer::after,
-#features11-2q .tlv__pointer-2::after{
-  content:none;
+#features11-2q .tlv__pointer-2::after {
+  content: none;
 }
-.cid-uThIzjqaZ2 .tlv__item-first, .cid-uThIzjqaZ2 .tlv__item-first2{
+
+.cid-uThIzjqaZ2 .tlv__item-first,
+.cid-uThIzjqaZ2 .tlv__item-first2 {
   background: none;
-  
+
 }
 
 
 /* Text kleur */
-.cid-uThINM6q35 .mbr-text{
+.cid-uThINM6q35 .mbr-text {
   color: #454545;
 }
-
