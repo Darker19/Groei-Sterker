@@ -298,7 +298,7 @@ a:hover {
 
 /* start Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
 .quotes {
-  font-family: 'tangerine', sans-serif;
+  font-family: 'Cookie', cursive;
   font-size: 2rem;
   font-weight: 900;
   letter-spacing: 1px;
@@ -653,4 +653,15 @@ button.panel-title {
   display: inline-block;
   height: auto;
   width: 110px;
+}
+
+#openingstijdencontact {
+  width: 100%;
+}
+
+.table-item-row {
+  width: 33.33333333%;
+  flex-grow: 1;
+  padding: 14px;
+
 }
