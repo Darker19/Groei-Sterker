@@ -299,7 +299,7 @@ a:hover {
 /* start Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
 .quotes {
   font-family: 'Cookie', cursive;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 900;
   letter-spacing: 1px;
   line-height: 1;
@@ -311,8 +311,7 @@ a:hover {
   padding: 0 !important;
 }
 
-#quotes .col-md-12,
-.col-12 {
+#quotes {
   display: flex;
   /* verticaal + horizontaal centreren */
   align-items: center;
@@ -664,4 +663,11 @@ button.panel-title {
   flex-grow: 1;
   padding: 14px;
 
+}
+
+
+@media (max-width: 767px) {
+  .cid-uThLkJel1E .panel-text {
+    padding-left: 30px;
+  }
 }
