@@ -197,14 +197,14 @@ a:hover {
 }
 
 /* Table basics */
-.openings-container table {
+#openingstijden {
   width: 100%;
   border-collapse: collapse;
   font-family: Arial, sans-serif;
 }
 
-.openings-container th,
-.openings-container td {
+#openingstijden th,
+#openingstijden td {
   text-align: left;
   color: black;
   font-size: 1rem;
@@ -214,14 +214,14 @@ a:hover {
 }
 
 /* First column (icon) */
-.openings-container td:first-child {
+#openingstijden td:first-child {
   width: 24px;
   text-align: center;
   /* center the icon horizontally */
 }
 
 /* Today highlight */
-.openings-container tr.highlight {
+#openingstijden tr.highlight {
   /* background: #fff6c4;       subtle background */
   font-weight: 700;
 }
@@ -237,6 +237,19 @@ a:hover {
   margin-right: 5px;
 }
 
+#openingstijdencontact {
+  width: 100%;
+}
+
+
+.table-item-row {
+  width: 33.33333333%;
+  flex-grow: 1;
+  padding: 14px;
+
+}
+
+/* ========== Aanpassing Openingstijden ========== */
 
 /* Optional: pill background of the button */
 .menu .navbar-toggler {
@@ -652,17 +665,6 @@ button.panel-title {
   display: inline-block;
   height: auto;
   width: 110px;
-}
-
-#openingstijdencontact {
-  width: 100%;
-}
-
-.table-item-row {
-  width: 33.33333333%;
-  flex-grow: 1;
-  padding: 14px;
-
 }
 
 
