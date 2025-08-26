@@ -221,21 +221,34 @@ a:hover {
 }
 
 /* Today highlight */
-#openingstijden tr.highlight {
-  /* background: #fff6c4;       subtle background */
+#openingstijden tr.highlight td,
+#openingstijdencontact tr.highlight td {
+  /* background: #fff6c4;        subtle background */
   font-weight: 700;
 }
 
 /* Icon itself */
 .day-icon {
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  vertical-align: middle;
-  /* aligns with text if they share a cell */
-  /* margin-right only matters if icon and text are in SAME cell */
-  margin-right: 5px;
+  max-height: 1em;
+  /* match text height */
+  width: auto;
 }
+
+#openingstijden td:first-child,
+#openingstijdencontact td:first-child {
+  width: 28px;
+  padding: 0 6px;
+  vertical-align: middle;
+}
+
+#openingstijden td:first-child,
+#openingstijdencontact td:first-child {
+  display: flex;
+  align-items: center;
+  /* vertical centering */
+  justify-content: center;
+}
+
 
 #openingstijdencontact {
   width: 100%;
@@ -247,6 +260,11 @@ a:hover {
   flex-grow: 1;
   padding: 14px;
 
+}
+
+#openingstijdencontact .day-icon {
+  transform: translateY(15px);
+  /* nudge down */
 }
 
 /* ========== Aanpassing Openingstijden ========== */
