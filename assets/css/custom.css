@@ -398,7 +398,7 @@ a:hover {
 }
 
 /* behandelingen */
-.mbr-section-title.mb-2.mbr-fonts-style.display-5 {
+.mbr-section-head.align-left.pb-3.mb-5.behandelingen {
   text-align: center;
 }
 
@@ -660,7 +660,7 @@ button.panel-title {
 
 .pink {
   background-size: 100% 0.521em;
-  display: inline;
+  display: inline-block;
   margin: 0 -12px;
   padding: 0 12px;
   background-image: linear-gradient(to top, rgba(250, 157, 183, 0.5), rgba(250, 157, 183, 0.5));
@@ -670,7 +670,7 @@ button.panel-title {
 
 .yellow {
   background-size: 100% 0.521em;
-  display: inline;
+  display: inline-block;
   margin: 0 -12px;
   padding: 0 12px;
   background-image: linear-gradient(to top, rgba(255, 200, 91, 0.5), rgba(255, 200, 91, 0.5));
