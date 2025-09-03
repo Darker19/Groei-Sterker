@@ -313,14 +313,30 @@ a:hover {
   }
 }
 
-.social-list>.soc-item,
-.social-list .soc-item img,
-.social-list .soc-item a {
+/* Basis styling voor alle social items */
+.social-list .soc-item {
   display: inline-block;
-  width: 50px;
-  height: 100%;
+  text-align: center;
+  margin: 0 5px;
+}
+
+/* Basis styling voor alle iconen */
+.social-list .soc-item img {
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
   border-radius: 0% !important;
-  margin-top: 0;
+}
+
+/* Afzonderlijke groottes per type */
+.social-list .linkedin img {
+  width: 85px;
+  height: auto;
+}
+
+.social-list .whatsapp img {
+  width: 70px;
+  height: auto;
 }
 
 .cid-uThB3uFYeJ .links,
