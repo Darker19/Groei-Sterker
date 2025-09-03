@@ -345,6 +345,20 @@ a:hover {
   margin-bottom: 1rem;
 }
 
+.intro img {
+  width: 85px;
+  height: auto;
+  border-radius: 0% !important;
+}
+
+.card-box {
+  display: flex;
+  align-items: center;
+  /* vertical center */
+  height: 120px;
+  /* give it a height to see the effect */
+}
+
 .list-item.col-sm-12 .item-image,
 .list-item.col-sm-12 img {
   display: inline-block;
