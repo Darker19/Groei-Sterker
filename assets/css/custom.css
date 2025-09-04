@@ -783,3 +783,15 @@ button.panel-title {
     padding-left: 30px;
   }
 }
+
+
+a {
+  color: #454545;
+  text-decoration: underline;
+}
+
+a:hover,
+a:focus,
+a:active {
+  color: #f9b18a;
+}
