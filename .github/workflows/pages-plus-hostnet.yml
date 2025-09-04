@@ -11,7 +11,8 @@ permissions:
   id-token: write
 
 env:
-  REMOTE_PATH: "/httpdocs/"  # Plesk/Hostnet documentroot (eindigend met /)
+  # JOUW webroot bij Hostnet (trailing slash verplicht)
+  SERVER_DIR: "/customers/3/b/0/cebjgz0mr/webroots/sites/groei-sterker.nl/"
 
 jobs:
   build:
@@ -20,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Maak een schone deploy-map zonder rommel
+      # Schone deploy-map zonder rommel
       - name: Prepare clean deploy folder (exclude junk)
         run: |
           mkdir -p deploy
@@ -45,13 +46,13 @@ jobs:
             --exclude='**/*.map' \
             ./ deploy/
 
-      # Upload naar GitHub Pages (preview)
+      # Preview naar GitHub Pages
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: deploy
 
-      # Bewaar dezelfde build voor FTP-deploy
+      # Zelfde build bewaren voor Hostnet
       - name: Upload CI artifact
         uses: actions/upload-artifact@v4
         with:
@@ -72,7 +73,7 @@ jobs:
   deploy_hostnet:
     needs: deploy_pages
     runs-on: ubuntu-latest
-    environment: production     # zorg dat Environment 'production' bestaat met Required reviewers
+    environment: production     # zorg dat deze Environment bestaat + Required reviewers
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -80,21 +81,21 @@ jobs:
           name: site-dist
           path: site
 
-      - name: FTP deploy to Hostnet
+      - name: FTP deploy to Hostnet (DRY-RUN)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          server: ${{ secrets.SFTP_HOST }}      # hergebruik je bestaande secrets
+          server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          protocol: ftp                         # evt. ftps als je host dat ondersteunt
+          protocol: ftp
           port: 21
-          local-dir: ./                      # let op: trailing slash verplicht
-          server-dir: httpdocs/    # of: ./  (zie uitleg hierboven)
-          exclude: |                            # extra zekerheid naast de 'clean' stap
+          local-dir: site/                     # trailing slash verplicht
+          server-dir: ${{ env.SERVER_DIR }}    # trailing slash verplicht
+          exclude: |
             **/.git*
-            **/.git*/**
             **/node_modules/**
             .github/**
             README.md
             LICENSE
-            INSTALL.txt
+          dry-run: true                        # ← alleen loggen; niets uploaden/verwijderen
+          log-level: verbose                   # ← extra details in de logs
