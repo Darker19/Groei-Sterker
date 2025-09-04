@@ -70,29 +70,28 @@ jobs:
         uses: actions/deploy-pages@v4
 
   deploy_hostnet:
-  needs: deploy_pages
-  runs-on: ubuntu-latest
-  environment: production
-  steps:
-    - name: Checkout (nodig voor delta-sync)
-        # vereist door de actie bij sync: delta
-      uses: actions/checkout@v4
+    needs: deploy_pages
+    runs-on: ubuntu-latest
+    environment: production   # Zorg dat Environment 'production' bestaat + Required reviewers
+    steps:
+      - name: Checkout (nodig voor delta-sync)
+        uses: actions/checkout@v4
 
-    - name: Download build artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: site-dist
-        path: site
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-dist
+          path: site
 
-    - name: Upload via SFTP naar Hostnet
-      uses: milanmk/actions-file-deployer@master
-      with:
-        remote-protocol: sftp
-        remote-host: ${{ secrets.SFTP_HOST }}
-        remote-user: ${{ secrets.SFTP_USER }}
-        remote-password: ${{ secrets.SFTP_PASSWORD }}   # ← jouw secret gebruiken
-        # ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}  # weglaten bij password-auth
-        local-path: "site"
-        remote-path: "/httpdocs"
-        sync: "delta"
-        ssh-options: "-o StrictHostKeyChecking=no"
+      - name: Upload via SFTP naar Hostnet
+        uses: milanmk/actions-file-deployer@master
+        with:
+          remote-protocol: sftp
+          remote-host: ${{ secrets.SFTP_HOST }}
+          remote-user: ${{ secrets.SFTP_USER }}
+          remote-password: ${{ secrets.SFTP_PASSWORD }}   # wachtwoord-auth
+          # ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}  # gebruik dit i.p.v. password als je met SSH key werkt
+          local-path: "site"
+          remote-path: ${{ env.REMOTE_PATH }}
+          sync: "delta"
+          ssh-options: "-o StrictHostKeyChecking=no"
