@@ -378,10 +378,6 @@ a:hover {
 
 }
 
-#quotes {
-  background-color: #fbf9ed;
-  padding: 0 !important;
-}
 
 #quotes {
   display: flex;
@@ -392,6 +388,15 @@ a:hover {
   /* gelijke binnenruimte */
   min-height: 140px;
   /* optioneel: geeft wat hoogte aan het kleurvlak */
+  background-color: #fbf9ed;
+  padding: 0 !important;
+}
+
+@media (max-width: 991.98px) {
+  .quotes {
+    padding-block: 24px !important;
+    padding-inline: 32px !important;
+  }
 }
 
 #quotes p.quotes {
