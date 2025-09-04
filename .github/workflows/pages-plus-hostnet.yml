@@ -69,6 +69,19 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+deploy_hostnet:
+  needs: deploy_pages
+  runs-on: ubuntu-latest
+  environment: production
+  steps:
+    - name: Checkout (nodig voor delta-sync)
+      uses: actions/checkout@v4
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: site-dist
+        path: site
   deploy_hostnet:
     needs: deploy_pages
     runs-on: ubuntu-latest
@@ -83,14 +96,14 @@ jobs:
           name: site-dist
           path: site
 
-      - name: Upload via SFTP naar Hostnet
-        uses: milanmk/actions-file-deployer@master
-        with:
-          remote-protocol: sftp
-          remote-host: ${{ secrets.SFTP_HOST }}
-          remote-user: ${{ secrets.SFTP_USER }}
-          ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}  # of: remote-password
-          local-path: "site"
-          remote-path: ${{ env.REMOTE_PATH }}
-          sync: "delta"
-          ssh-options: "-o StrictHostKeyChecking=no"
+    - name: Upload via SFTP naar Hostnet
+      uses: milanmk/actions-file-deployer@master
+      with:
+        remote-protocol: sftp
+        remote-host: ${{ secrets.SFTP_HOST }}
+        remote-user: ${{ secrets.SFTP_USER }}
+        ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        local-path: "site"
+        remote-path: "/httpdocs"
+        sync: "delta"
+        ssh-options: "-o StrictHostKeyChecking=no"
