@@ -359,6 +359,14 @@ a:hover {
   /* give it a height to see the effect */
 }
 
+.card-box-contact {
+  text-align: left;
+}
+
+.cid-uThQNb6kqA .card:hover .card-title {
+  color: #323432;
+}
+
 .list-item.col-sm-12 .item-image,
 .list-item.col-sm-12 img {
   display: inline-block;
