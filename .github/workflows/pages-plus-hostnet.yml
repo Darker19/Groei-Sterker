@@ -2,7 +2,7 @@ name: Pages preview → Hostnet deploy (clean)
 
 on:
   push:
-    branches: [ main ]      # pas aan als je default branch anders heet
+    branches: [ main ]      # pas aan als jouw default branch anders heet
   workflow_dispatch:
 
 permissions:
@@ -44,10 +44,8 @@ jobs:
             --exclude='**/*.xcf' \
             --exclude='**/*.map' \
             ./ deploy/
-          # Voeg extra excludes toe als je iets niet live nodig hebt
-          # --exclude='history/'
 
-      # Upload naar GitHub Pages (preview) — uit de schone map
+      # Upload naar GitHub Pages (preview)
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -74,8 +72,11 @@ jobs:
   deploy_hostnet:
     needs: deploy_pages
     runs-on: ubuntu-latest
-    environment: production     # ← approval vereist in Environment ‘production’
+    environment: production     # Zorg dat Environment 'production' bestaat en reviewers heeft
     steps:
+      - name: Checkout (nodig voor delta-sync)
+        uses: actions/checkout@v4
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
