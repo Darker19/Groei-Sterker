@@ -1,4 +1,4 @@
-name: Pages preview → Hostnet deploy (clean)
+name: Pages preview → Hostnet deploy (FTP clean)
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 env:
-  REMOTE_PATH: "/httpdocs"  # Hostnet/Plesk documentroot
+  REMOTE_PATH: "/httpdocs/"  # Plesk/Hostnet documentroot (eindigend met /)
 
 jobs:
   build:
@@ -51,7 +51,7 @@ jobs:
         with:
           path: deploy
 
-      # Bewaar dezelfde build voor Hostnet
+      # Bewaar dezelfde build voor FTP-deploy
       - name: Upload CI artifact
         uses: actions/upload-artifact@v4
         with:
@@ -72,25 +72,29 @@ jobs:
   deploy_hostnet:
     needs: deploy_pages
     runs-on: ubuntu-latest
-    environment: production   # Zorg dat Environment 'production' bestaat + Required reviewers
+    environment: production     # zorg dat Environment 'production' bestaat met Required reviewers
     steps:
-      - name: Checkout (nodig voor delta-sync)
-        uses: actions/checkout@v4
-
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: site-dist
           path: site
 
-      - name: Upload via SFTP naar Hostnet
-        uses: milanmk/actions-file-deployer@master
+      - name: FTP deploy to Hostnet
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          remote-protocol: sftp
-          remote-host: ${{ secrets.SFTP_HOST }}
-          remote-user: ${{ secrets.SFTP_USER }}
-          remote-password: ${{ secrets.SFTP_PASSWORD }}   # wachtwoord-authenticatie
-          local-path: "site"
-          remote-path: ${{ env.REMOTE_PATH }}
-          sync: "delta"
-          ssh-options: "-o StrictHostKeyChecking=no"
+          server: ${{ secrets.SFTP_HOST }}      # hergebruik je bestaande secrets
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          protocol: ftp                         # evt. ftps als je host dat ondersteunt
+          port: 21
+          local-dir: site/                      # let op: trailing slash verplicht
+          server-dir: ${{ env.REMOTE_PATH }}    # let op: trailing slash verplicht
+          exclude: |                            # extra zekerheid naast de 'clean' stap
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .github/**
+            README.md
+            LICENSE
+            INSTALL.txt
