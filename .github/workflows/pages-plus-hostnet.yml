@@ -89,8 +89,7 @@ jobs:
           remote-protocol: sftp
           remote-host: ${{ secrets.SFTP_HOST }}
           remote-user: ${{ secrets.SFTP_USER }}
-          remote-password: ${{ secrets.SFTP_PASSWORD }}   # wachtwoord-auth
-          # ssh-private-key: ${{ secrets.DEPLOY_PRIVATE_KEY }}  # gebruik dit i.p.v. password als je met SSH key werkt
+          remote-password: ${{ secrets.SFTP_PASSWORD }}   # wachtwoord-authenticatie
           local-path: "site"
           remote-path: ${{ env.REMOTE_PATH }}
           sync: "delta"
