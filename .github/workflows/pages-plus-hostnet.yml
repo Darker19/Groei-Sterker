@@ -97,5 +97,3 @@ jobs:
             .github/**
             README.md
             LICENSE
-          dry-run: true                        # ← alleen loggen; niets uploaden/verwijderen
-          log-level: verbose                   # ← extra details in de logs
