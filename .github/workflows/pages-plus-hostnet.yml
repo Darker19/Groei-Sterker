@@ -88,8 +88,8 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           protocol: ftp                         # evt. ftps als je host dat ondersteunt
           port: 21
-          local-dir: site/                      # let op: trailing slash verplicht
-          server-dir: ${{ env.REMOTE_PATH }}    # let op: trailing slash verplicht
+          local-dir: ./                      # let op: trailing slash verplicht
+          server-dir: httpdocs/    # of: ./  (zie uitleg hierboven)
           exclude: |                            # extra zekerheid naast de 'clean' stap
             **/.git*
             **/.git*/**
