@@ -683,7 +683,8 @@ button.panel-title {
 }
 
 .navbar-dropdown .navbar-logo img,
-.navbar-logo {
+.navbar-logo,
+.item-image img {
   border-radius: 0px !important;
 }
 
