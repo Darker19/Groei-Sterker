@@ -179,6 +179,10 @@ a:hover {
   /* stripe color */
 }
 
+.cid-uThSbHawYh button.navbar-toggler .hamburger span {
+  height: 3px;
+}
+
 .menu .navbar-toggler:not(.collapsed) .hamburger span {
   background: #f9b18a !important;
   /* same when open */
@@ -794,4 +798,10 @@ a:hover,
 a:focus,
 a:active {
   color: #f9b18a;
+}
+
+
+
+.card-box a {
+  text-decoration: none;
 }
