@@ -814,3 +814,12 @@ a:active {
 .cid-uThB3uFYeJ {
   padding-bottom: 0px;
 }
+
+@media (max-width: 767px) {
+
+  .cid-uThzzBMKzy .cards,
+  img {
+    flex-direction: row;
+    max-width: none;
+  }
+}
