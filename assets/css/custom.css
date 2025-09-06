@@ -823,3 +823,11 @@ a:active {
     max-width: none;
   }
 }
+
+#image-Supervisor img {
+  display: inline;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
+  width: 100%;
+}
