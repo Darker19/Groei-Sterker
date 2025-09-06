@@ -831,3 +831,9 @@ a:active {
   height: 250px;
   width: 100%;
 }
+
+@media (min-width: 992px) {
+  .col-lg-5 {
+    width: none;
+  }
+}
