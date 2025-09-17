@@ -900,7 +900,7 @@ a:active {
 }
 
 .spacer-row td {
-  height: 80px;
+  height: 50px;
 }
 
 /* --- Responsive stack voor mobiel --- */
@@ -962,9 +962,7 @@ a:active {
 
 
 /*tarieven pagina aanpassing einde */
-.spacer-row td {
-  height: 80px;
-}
+
 
 /* scoliose.html kleur volgorde */
 .title2.kidsm4_title2.cid-uThPitc9fX {
