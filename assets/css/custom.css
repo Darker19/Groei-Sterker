@@ -840,7 +840,7 @@ a:active {
 
 
 /* Aanpassing tarieven pagina */
-#tarieven {
+.tarieven {
   padding-top: 125px;
   align-content: center;
   border: none;
@@ -850,8 +850,8 @@ a:active {
   border-collapse: collapse;
 }
 
-#tarieven th,
-#tarieven td {
+.tarieven th,
+.tarieven td {
   border-color: inherit;
   border-style: solid;
   border-width: 0;
@@ -870,21 +870,21 @@ a:active {
   hyphens: auto;
 }
 
-#tarieven th {
+.tarieven th {
   background-color: #ffdecc;
 }
 
-#tarieven tr {
+.tarieven tr {
   justify-content: flex-start;
   border-bottom: 1px solid rgba(0, 0, 0, 0.07);
 }
 
-#tarieven tr:nth-child(odd) {
+.tarieven tr:nth-child(odd) {
   background-color: #fbf9ed;
   /* lichte peach kleur */
 }
 
-#tarieven tr:nth-child(even) {
+.tarieven tr:nth-child(even) {
   background-color: #ffdecc;
   /* bijna wit */
 }
