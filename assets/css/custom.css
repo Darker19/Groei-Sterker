@@ -899,55 +899,11 @@ a:active {
   /* bijna wit */
 }
 
-/* --- Responsive stack voor mobiel --- */
-/* uitzetten omdat het niet mooi is met 3 kolommen */
-@media (max-width: 640px) {
-  .not-used-anymore.tarieven thead {
-    display: none;
-    /* kolomtitels verbergen */
-  }
-
-  .not-used-anymore.tarieven,
-  .not-used-anymore.tarieven tbody,
-  .not-used-anymore.tarieven tr,
-  .not-used-anymore.tarieven td {
-    display: block;
-    width: 100%;
-    padding-top: 0;
-    border-bottom: 0px solid rgba(0, 0, 0, 0.07);
-  }
-
-  .not-used-anymore.tarieven tr {
-    margin-bottom: 0.5rem;
-    border: 2px solid rgba(0, 0, 0, 0.07);
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-    /* achtergrond reset per kaart */
-  }
-
-  .not-used-anymore.tarieven td {
-    display: flex;
-    flex-direction: column;
-    /* label boven waarde */
-    padding: 10px 14px;
-  }
-
-  .not-used-anymore.tarieven td:last-child {
-    border-bottom: none;
-  }
-
-  .not-used-anymore.tarieven td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
-    /* ruimte tussen label en waarde */
-    display: block;
-  }
+.spacer-row td {
+  height: 80px;
 }
 
-/* Einde uitzetten omdat het niet mooi is met 3 kolommen Einde*/
+/* --- Responsive stack voor mobiel --- */
 @media (max-width: 640px) {
   .tarieven {
     padding-top: 125px;
@@ -995,6 +951,10 @@ a:active {
 
   .col-duur {
     width: 25%;
+  }
+
+  table.tarieven .spacer-row td {
+    height: 40px;
   }
 
 }
