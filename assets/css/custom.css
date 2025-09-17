@@ -884,7 +884,7 @@ a:active {
   /* lichte peach kleur */
 }
 
-#tarieven tr:nth-child(even) {
+#tarieven t:nth-child(even) {
   background-color: #ffdecc;
   /* bijna wit */
 }
