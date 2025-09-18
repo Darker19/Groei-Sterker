@@ -982,3 +982,8 @@ a:active {
 }
 
 /* scoliose.html kleur volgorde einde */
+
+
+.social-data a {
+  text-decoration: none;
+}
