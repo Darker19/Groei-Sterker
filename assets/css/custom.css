@@ -984,7 +984,8 @@ a:active {
 /* scoliose.html kleur volgorde einde */
 
 
-.social-data a:hover {
-  text-decoration: none !important;
+.social-data a:hover,
+.social-data a {
+  text-decoration: none;
   color: #454545;
 }
