@@ -355,6 +355,10 @@ a:hover {
   border-radius: 0% !important;
 }
 
+.card-title.mbr-fonts-style.display-4 {
+  letter-spacing: 0.1em;
+}
+
 .card-box {
   display: flex;
   align-items: center;
