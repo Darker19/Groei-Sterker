@@ -43,11 +43,9 @@
     }
 
     // --- Navigatie: <a href="geo:...q=Adres" data-fallback="https://..."> ---
-    // Op mobiel laten we de geo:-link z'n werk doen (keuzemenu/Apple Maps).
-    // We zetten een fallback klaar naar data-fallback (zelfde tab) na 5s, tenzij de pagina verdwijnt.
-    // Op desktop negeren we geo: en openen we de fallback in een nieuw tabblad.
     const ua = navigator.userAgent;
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(ua);
+    const isFirefox = /Firefox/i.test(ua);
 
     document.addEventListener('click', (e) => {
       const a = e.target.closest('a[data-fallback][href^="geo:"]');
@@ -56,28 +54,37 @@
       const fallbackUrl = a.getAttribute('data-fallback');
       if (!fallbackUrl) return;
 
+      // --- Firefox: altijd direct fallback (geen geo:)
+      if (isFirefox) {
+        e.preventDefault();
+        if (isMobile) {
+          window.location.href = fallbackUrl; // zelfde tab
+        } else {
+          window.open(fallbackUrl, '_blank', 'noopener'); // desktop nieuw tabblad
+        }
+        return;
+      }
+
+      // --- Andere browsers ---
       if (!isMobile) {
-        // Desktop/laptop: open altijd fallback in nieuw tabblad
+        // Desktop/laptop: direct fallback in nieuw tabblad
         e.preventDefault();
         window.open(fallbackUrl, '_blank', 'noopener');
         return;
       }
 
-      // Mobiel: NIET preventDefault; laat de browser/OS de geo:-link volgen.
-      // Zet wel een timeout fallback klaar.
+      // Mobiel (niet-Firefox): probeer geo:, met fallback na 5s
       let timer;
       const cancel = () => { if (timer) clearTimeout(timer); };
-
-      // App opent -> pagina naar achtergrond -> cancel fallback
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'hidden') cancel();
       }, { once: true });
       window.addEventListener('pagehide', cancel, { once: true });
 
       timer = setTimeout(() => {
-        // Zelfde tab om popup blockers te vermijden
         window.location.href = fallbackUrl;
       }, 5000);
+      // Belangrijk: geen preventDefault -> laat de geo: link doorgaan
     });
   };
 
