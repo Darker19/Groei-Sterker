@@ -5,39 +5,42 @@
 (() => {
   'use strict';
 
-  // --- Navigatie openen (PC -> short URL in nieuw tabblad; Mobiel -> geo: + fallback) ---
+  // --- Navigatie openen (PC -> short URL nieuw tab; Mobiel -> geo: + fallback (zelfde tab)) ---
   const openNav = ({ shortUrl, address = '' }) => {
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 
-    // Voor geo: gebruiken we de adresstring (betere matching voor Android/iOS)
+    // Voor geo: gebruiken we de adresstring (Android keuzemenu / iOS Apple Maps)
     const encodedAddress = encodeURIComponent(address);
-    const geoUrl = `geo:0,0?q=${encodedAddress}`;
+    const geoUrl = encodedAddress ? `geo:0,0?q=${encodedAddress}` : null;
 
     if (!isMobile) {
-      // Desktop/laptop → altijd short URL in nieuw tabblad
+      // Desktop/laptop → altijd short URL in nieuw tabblad (direct in click-handler = niet geblokkeerd)
       window.open(shortUrl, '_blank');
       return;
     }
 
-    // Mobiel → probeer eerst geo: (Android keuze, iOS Apple Maps)
-    // Fallback naar short URL (nieuw tabblad) als er geen app reageert
+    // Mobiel → probeer eerst geo:, anders fallback naar short URL (zelfde tab)
     let fallbackTimer;
     const cancelFallback = () => { if (fallbackTimer) clearTimeout(fallbackTimer); };
 
-    // Als de pagina "verdwijnt" (app geopend), cancel fallback
+    // Als de pagina "verdwijnt" (app geopend), cancel de fallback
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') cancelFallback();
     }, { once: true });
     window.addEventListener('pagehide', cancelFallback, { once: true });
 
+    // Fallback na 5s — gebruik location.href i.p.v. window.open om popup blockers te vermijden
     fallbackTimer = setTimeout(() => {
-      // Let op: window.open in een timeout kan door pop-up blockers geblokkeerd worden.
-      // Als dat gebeurt, kun je eventueel switchen naar window.location.href
-      window.open(shortUrl, '_blank');
-    }, 5000); // 5 seconden wachten
+      window.location.href = shortUrl;
+    }, 5000);
 
-    // Start poging om een app te openen
-    window.location.href = geoUrl; // geo: opent in app (geen nieuw tabblad)
+    // Start poging om een app te openen via geo: (als er een adres is)
+    if (geoUrl) {
+      window.location.href = geoUrl; // opent app (geen nieuw tabblad)
+    } else {
+      // Geen adres mee? Ga direct naar short URL (zelfde tab op mobiel)
+      window.location.href = shortUrl;
+    }
   };
 
   const onReady = () => {
@@ -81,7 +84,7 @@
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-nav]');
       if (!btn) return;
-      const shortUrl = btn.getAttribute('data-url');        // bv. https://maps.app.goo.gl/iQJnAUbncyWkuH3T9
+      const shortUrl = btn.getAttribute('data-url');          // bv. https://maps.app.goo.gl/iQJnAUbncyWkuH3T9
       const address = btn.getAttribute('data-address') || ''; // bv. Diamantlaan 1, 2132 WV Hoofddorp
       if (shortUrl) {
         openNav({ shortUrl, address });
