@@ -5,35 +5,43 @@
 (() => {
   'use strict';
 
-  const openNav = (address = '') => {
+  // --- Navigatie openen (PC -> short URL in nieuw tabblad; Mobiel -> geo: + fallback) ---
+  const openNav = ({ shortUrl, address = '' }) => {
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+    // Voor geo: gebruiken we de adresstring (betere matching voor Android/iOS)
     const encodedAddress = encodeURIComponent(address);
-    const gmapsWeb = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
     const geoUrl = `geo:0,0?q=${encodedAddress}`;
 
     if (!isMobile) {
-      // Desktop: altijd naar Google Maps in de browser
-      window.location.href = gmapsWeb;
+      // Desktop/laptop → altijd short URL in nieuw tabblad
+      window.open(shortUrl, '_blank');
       return;
     }
 
-    // Mobiel: eerst geo: proberen (Android → keuze, iOS → Apple Maps)
+    // Mobiel → probeer eerst geo: (Android keuze, iOS Apple Maps)
+    // Fallback naar short URL (nieuw tabblad) als er geen app reageert
     let fallbackTimer;
     const cancelFallback = () => { if (fallbackTimer) clearTimeout(fallbackTimer); };
+
+    // Als de pagina "verdwijnt" (app geopend), cancel fallback
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') cancelFallback();
     }, { once: true });
     window.addEventListener('pagehide', cancelFallback, { once: true });
 
     fallbackTimer = setTimeout(() => {
-      window.location.href = gmapsWeb;
+      // Let op: window.open in een timeout kan door pop-up blockers geblokkeerd worden.
+      // Als dat gebeurt, kun je eventueel switchen naar window.location.href
+      window.open(shortUrl, '_blank');
     }, 1500);
 
-    window.location.href = geoUrl;
+    // Start poging om een app te openen
+    window.location.href = geoUrl; // geo: opent in app (geen nieuw tabblad)
   };
 
   const onReady = () => {
-    // Toggle-component
+    // --- Toggle-component: [data-toggle] + aria-controls="targetId" ---
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-toggle]');
       if (!btn) return;
@@ -45,7 +53,7 @@
       btn.setAttribute('aria-expanded', String(willOpen));
     });
 
-    // Smooth scroll
+    // --- Smooth scroll voor interne links ---
     const supportsSmooth = 'scrollBehavior' in document.documentElement.style;
     document.querySelectorAll('a[href^="#"]').forEach((a) => {
       a.addEventListener('click', (e) => {
@@ -58,7 +66,7 @@
       });
     });
 
-    // Sticky header
+    // --- Sticky header (.is-scrolled) ---
     const headers = document.querySelectorAll('header, .navbar');
     if (headers.length) {
       const onScroll = () => {
@@ -69,59 +77,23 @@
       window.addEventListener('scroll', onScroll, { passive: true });
     }
 
-    (() => {
-      'use strict';
-
-      const openNav = (address = '') => {
-        const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-        const encodedAddress = encodeURIComponent(address);
-        const gmapsWeb = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
-        const geoUrl = `geo:0,0?q=${encodedAddress}`;
-
-        if (!isMobile) {
-          // Desktop → open Google Maps in nieuwe tab
-          window.open(gmapsWeb, '_blank');
-          return;
-        }
-
-        // Mobiel → probeer eerst geo: (Android = keuzemenu, iOS = Apple Maps)
-        let fallbackTimer;
-        const cancelFallback = () => { if (fallbackTimer) clearTimeout(fallbackTimer); };
-        document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'hidden') cancelFallback();
-        }, { once: true });
-        window.addEventListener('pagehide', cancelFallback, { once: true });
-
-        fallbackTimer = setTimeout(() => {
-          window.open(gmapsWeb, '_blank');
-        }, 1500);
-
-        window.location.href = geoUrl; // geo: opent niet in nieuwe tab, alleen in apps
-      };
-
-      const onReady = () => {
-        document.addEventListener('click', (e) => {
-          const btn = e.target.closest('[data-nav]');
-          if (!btn) return;
-          const address = btn.getAttribute('data-address');
-          if (address) {
-            openNav(address);
-          }
-        });
-      };
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', onReady);
-      } else {
-        onReady();
+    // --- Navigation button: <button data-nav data-url="..." data-address="..."> ---
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-nav]');
+      if (!btn) return;
+      const shortUrl = btn.getAttribute('data-url');        // bv. https://maps.app.goo.gl/iQJnAUbncyWkuH3T9
+      const address = btn.getAttribute('data-address') || ''; // bv. Diamantlaan 1, 2132 WV Hoofddorp
+      if (shortUrl) {
+        openNav({ shortUrl, address });
       }
-    })();
-    // Navigatie naar kaart-app
+    });
   };
 
+  // Run after DOM is ready (works whether or not you used `defer`)
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', onReady);
   } else {
     onReady();
   }
 })();
+// ========== End of custom JS ==========
