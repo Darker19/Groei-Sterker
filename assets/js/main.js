@@ -5,44 +5,6 @@
 (() => {
   'use strict';
 
-  // --- Navigatie openen (PC -> short URL nieuw tab; Mobiel -> geo: + fallback (zelfde tab)) ---
-  const openNav = ({ shortUrl, address = '' }) => {
-    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
-    // Voor geo: gebruiken we de adresstring (Android keuzemenu / iOS Apple Maps)
-    const encodedAddress = encodeURIComponent(address);
-    const geoUrl = encodedAddress ? `geo:0,0?q=${encodedAddress}` : null;
-
-    if (!isMobile) {
-      // Desktop/laptop → altijd short URL in nieuw tabblad (direct in click-handler = niet geblokkeerd)
-      window.open(shortUrl, '_blank');
-      return;
-    }
-
-    // Mobiel → probeer eerst geo:, anders fallback naar short URL (zelfde tab)
-    let fallbackTimer;
-    const cancelFallback = () => { if (fallbackTimer) clearTimeout(fallbackTimer); };
-
-    // Als de pagina "verdwijnt" (app geopend), cancel de fallback
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') cancelFallback();
-    }, { once: true });
-    window.addEventListener('pagehide', cancelFallback, { once: true });
-
-    // Fallback na 5s — gebruik location.href i.p.v. window.open om popup blockers te vermijden
-    fallbackTimer = setTimeout(() => {
-      window.location.href = shortUrl;
-    }, 5000);
-
-    // Start poging om een app te openen via geo: (als er een adres is)
-    if (geoUrl) {
-      window.location.href = geoUrl; // opent app (geen nieuw tabblad)
-    } else {
-      // Geen adres mee? Ga direct naar short URL (zelfde tab op mobiel)
-      window.location.href = shortUrl;
-    }
-  };
-
   const onReady = () => {
     // --- Toggle-component: [data-toggle] + aria-controls="targetId" ---
     document.addEventListener('click', (e) => {
@@ -80,15 +42,42 @@
       window.addEventListener('scroll', onScroll, { passive: true });
     }
 
-    // --- Navigation button: <button data-nav data-url="..." data-address="..."> ---
+    // --- Navigatie: <a href="geo:...q=Adres" data-fallback="https://..."> ---
+    // Op mobiel laten we de geo:-link z'n werk doen (keuzemenu/Apple Maps).
+    // We zetten een fallback klaar naar data-fallback (zelfde tab) na 5s, tenzij de pagina verdwijnt.
+    // Op desktop negeren we geo: en openen we de fallback in een nieuw tabblad.
+    const ua = navigator.userAgent;
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(ua);
+
     document.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-nav]');
-      if (!btn) return;
-      const shortUrl = btn.getAttribute('data-url');          // bv. https://maps.app.goo.gl/iQJnAUbncyWkuH3T9
-      const address = btn.getAttribute('data-address') || ''; // bv. Diamantlaan 1, 2132 WV Hoofddorp
-      if (shortUrl) {
-        openNav({ shortUrl, address });
+      const a = e.target.closest('a[data-fallback][href^="geo:"]');
+      if (!a) return;
+
+      const fallbackUrl = a.getAttribute('data-fallback');
+      if (!fallbackUrl) return;
+
+      if (!isMobile) {
+        // Desktop/laptop: open altijd fallback in nieuw tabblad
+        e.preventDefault();
+        window.open(fallbackUrl, '_blank', 'noopener');
+        return;
       }
+
+      // Mobiel: NIET preventDefault; laat de browser/OS de geo:-link volgen.
+      // Zet wel een timeout fallback klaar.
+      let timer;
+      const cancel = () => { if (timer) clearTimeout(timer); };
+
+      // App opent -> pagina naar achtergrond -> cancel fallback
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') cancel();
+      }, { once: true });
+      window.addEventListener('pagehide', cancel, { once: true });
+
+      timer = setTimeout(() => {
+        // Zelfde tab om popup blockers te vermijden
+        window.location.href = fallbackUrl;
+      }, 5000);
     });
   };
 
