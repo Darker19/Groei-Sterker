@@ -34,7 +34,7 @@
       // Let op: window.open in een timeout kan door pop-up blockers geblokkeerd worden.
       // Als dat gebeurt, kun je eventueel switchen naar window.location.href
       window.open(shortUrl, '_blank');
-    }, 1500);
+    }, 5000); // 5 seconden wachten
 
     // Start poging om een app te openen
     window.location.href = geoUrl; // geo: opent in app (geen nieuw tabblad)
