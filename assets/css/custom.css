@@ -810,12 +810,17 @@ a:active {
   text-decoration: none;
 }
 
-.footer1 .kidsm4_footer1.cid-uThB3uFYeJ.disclaimer,
-.footer1 .kidsm4_footer1.cid-uThB3uFYeJ.disclaimer a:hover {
+.footer1.kidsm4_footer1.cid-uThB3uFYeJ.disclaimer {
   text-align: center;
   padding-bottom: 10px;
   color: #454545;
 }
+
+.footer1.kidsm4_footer1.cid-uThB3uFYeJ.disclaimer a:hover {
+  color: #454545;
+  /* voorbeeld: zwart bij hover */
+}
+
 
 .cid-uThB3uFYeJ {
   padding-bottom: 0px;
