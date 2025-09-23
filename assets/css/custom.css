@@ -355,6 +355,10 @@ a:hover {
   border-radius: 0% !important;
 }
 
+.card-title.mbr-fonts-style.display-4 {
+  letter-spacing: 0.1em;
+}
+
 .card-box {
   display: flex;
   align-items: center;
@@ -382,7 +386,7 @@ a:hover {
 
 /* start Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
 .quotes {
-  font-family: 'Cookie', cursive;
+  font-family: 'Ephesis', cursive;
   font-size: 1.5rem;
   font-weight: 900;
   letter-spacing: 1px;
@@ -693,7 +697,6 @@ button.panel-title {
   border-radius: 0px !important;
 }
 
-
 .Vlinder-over {
   position: relative;
   top: 40px;
@@ -809,7 +812,13 @@ a:active {
 #disclaimer {
   text-align: center;
   padding-bottom: 10px;
+  color: #454545;
 }
+
+#disclaimer a:hover {
+  color: #454545;
+}
+
 
 .cid-uThB3uFYeJ {
   padding-bottom: 0px;
@@ -988,4 +997,147 @@ a:active {
 .social-data a {
   text-decoration: none;
   color: #454545;
+}
+
+
+/* @media (min-width: 992px) {
+  #menu01-4a .navbar .container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start
+  }
+
+  #menu01-4a .navbar-brand {
+    position: static !important;
+    transform: none !important;
+    width: auto !important;
+    margin-left: auto !important;
+    text-align: right;
+  }
+
+  #menu01-4a .navbar-collapse {
+    flex: 1 1 auto;
+    min-width: 0
+  }
+
+  #menu01-4a .navbar-nav {
+    flex-wrap: nowrap;
+    white-space: nowrap
+  }
+} */
+
+
+
+/* ---- Dynamiek: normaal gecentreerd, krap = rechts ---- */
+@media (min-width: 992px) {
+
+
+
+  /* Menu blijft één regel */
+  #menu01-4a .navbar .container-fluid {
+    display: flex;
+    align-items: center;
+  }
+
+  #menu01-4a .navbar-collapse {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #menu01-4a .navbar-nav {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+
+  /* 1) Container voorspelbaar */
+  #menu01-4a .navbar .container-fluid {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    /* geen space-between */
+  }
+
+  /* 2) Maak van de collapse een rij op inhoudsbreedte */
+  #menu01-4a .navbar-collapse {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    flex: 0 1 auto !important;
+    /* NIET oprekken naar 100% */
+    width: auto !important;
+    /* override thema dat 'm 100% maakt */
+    gap: clamp(8px, 1.6vw, 24px);
+    /* ruimte tussen Contact en logo */
+  }
+
+  /* 3) Menulinks: één regel, nemen alleen eigen breedte */
+  #menu01-4a .navbar-nav {
+    display: flex !important;
+    flex: 0 1 auto !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+  }
+
+  /* 4) Logo: haal alle centrering/absolute hacks weg, geen auto-margin */
+  #menu01-4a .navbar-brand2,
+  #menu01-4a .navbar-logo {
+    position: static !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    width: auto !important;
+  }
+
+  #menu01-4a .navbar-collapse>.navbar-brand2 {
+    order: 2;
+    /* na de UL */
+    flex: 0 0 auto !important;
+    margin-left: clamp(8px, 1.6vw, 20px) !important;
+    /* vaste afstand achter Contact */
+    margin-right: 0 !important;
+    /* zeker weten niet naar rechts duwen */
+    text-align: left !important;
+  }
+
+  /* 5) (optioneel) Toggler geen invloed op desktopvolgorde */
+  #menu01-4a .navbar-toggler {
+    order: 0;
+  }
+}
+
+/* MOBIEL (<992px): toon de 1e brand (buiten .navbar-collapse) rechts; verberg desktop-brand */
+@media (max-width: 991.98px) {
+  #menu01-4a .navbar>.container-fluid {
+    display: flex;
+    align-items: center;
+  }
+
+  /* eerste brand direct onder .container-fluid */
+  #menu01-4a .navbar>.container-fluid>.navbar-brand2 {
+    display: flex !important;
+    align-items: center;
+    margin-left: auto;
+    /* -> duwt naar rechts naast hamburger */
+  }
+
+  /* brand binnen de collapse verbergen op mobiel */
+  #menu01-4a .navbar .navbar-collapse>.navbar-brand2 {
+    display: none !important;
+  }
+
+  /* optioneel compacter logo op mobiel */
+  #menu01-4a .navbar>.container-fluid>.navbar-brand2 img {
+    height: 2.5rem;
+  }
+}
+
+/* DESKTOP (>=992px): verberg mobiele brand; toon desktop-brand na 'Contact' */
+@media (min-width: 992px) {
+
+  /* mobiele brand uit */
+  #menu01-4a .navbar>.container-fluid>.navbar-brand {
+    display: none !important;
+  }
 }
