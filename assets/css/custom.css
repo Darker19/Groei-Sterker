@@ -386,11 +386,12 @@ a:hover {
 
 /* start Quotes - container /* title2 kidsm4_title2 cid-uThIJ3wBHx */
 .quotes {
-  font-family: 'Cookie', cursive;
-  font-size: 1.5rem;
-  font-weight: 900;
+  font-family: 'Finger Paint', cursive;
+  font-size: 1rem;
+  font-weight: 400;
   letter-spacing: 1px;
   line-height: 1;
+  font-style: normal;
 
 }
 
