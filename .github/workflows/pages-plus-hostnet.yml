@@ -29,7 +29,7 @@ jobs:
         run: |
           echo "Testing Discord webhook..."
           curl -i -H "Content-Type: application/json" -X POST \
-            -d '{"content":"(debug) GitHub Actions webhook test ✅"}' \
+            -d '{"content":"GitHub Actions ✅"}' \
             "${{ secrets.DISCORD_WEBHOOK }}"
 
       - name: Discord — Deploys gestart (met commit summary)
