@@ -27,7 +27,7 @@ jobs:
 
       - name: Check website
         run: |
-          URL="https://jouwdomein.nl"
+          URL="https://www.groei-sterker.nl"
           CODE=$(curl -s -o /dev/null -m 10 -w "%{http_code}" "$URL" || echo "000")
 
           if [ "$CODE" -ge 200 ] && [ "$CODE" -lt 400 ]; then
