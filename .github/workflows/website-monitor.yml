@@ -1,4 +1,4 @@
-name: Website monitor
+name: Website monitor (via UptimeRobot)
 
 on:
   schedule:
@@ -28,21 +28,68 @@ jobs:
             echo "LAST=UNKNOWN" >> $GITHUB_ENV
           fi
 
-      - name: Check website
+      - name: Fetch status from UptimeRobot API
+        env:
+          UPTIMEROBOT_API_KEY: ${{ secrets.UPTIMEROBOT_API_KEY }}
         run: |
-          URL="https://groei-sterker.nl"
-          CODE=$(curl -sS -L -o /dev/null -m 10 -w "%{http_code}" "$URL" || true)
-          [ -z "$CODE" ] && CODE="000"
+          python3 - <<'PY'
+          import os, json, urllib.request, urllib.parse
 
-          if [ "$CODE" -ge 200 ] && [ "$CODE" -lt 400 ]; then
-            echo "UP" > .status/now.txt
-          else
-            echo "DOWN" > .status/now.txt
-          fi
+          api_key = os.environ.get("UPTIMEROBOT_API_KEY")
+          if not api_key:
+            raise SystemExit("Missing secret: UPTIMEROBOT_API_KEY")
 
-          echo "NOW=$(cat .status/now.txt)" >> $GITHUB_ENV
-          echo "CODE=$CODE" >> $GITHUB_ENV
-          echo "URL=$URL" >> $GITHUB_ENV
+          url = "https://api.uptimerobot.com/v2/getMonitors"
+          data = urllib.parse.urlencode({
+            "api_key": api_key,
+            "format": "json",
+            "logs": "0"
+          }).encode("utf-8")
+
+          req = urllib.request.Request(
+            url,
+            data=data,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            method="POST"
+          )
+
+          with urllib.request.urlopen(req, timeout=20) as r:
+            body = r.read().decode("utf-8")
+
+          payload = json.loads(body)
+
+          monitors = payload.get("monitors", [])
+          if not monitors:
+            # monitor-specific keys zouden 1 monitor terug moeten geven
+            now = "UNKNOWN"
+            status_code = "NA"
+            murl = "(no monitor returned)"
+            msg = "No monitor returned from API"
+          else:
+            m = monitors[0]
+            status = int(m.get("status", -1))
+            murl = m.get("url") or m.get("friendly_name") or "(unknown)"
+            # UptimeRobot status codes: 2=up, 8=seems down, 9=down, 0=paused, 1=not checked yet
+            if status == 2:
+              now = "UP"
+              msg = "UP"
+            elif status in (8, 9):
+              now = "DOWN"
+              msg = "DOWN"
+            else:
+              now = "UNKNOWN"
+              msg = f"STATUS_{status}"
+
+            status_code = str(status)
+
+          # schrijf naar GITHUB_ENV (single-line, geen EOF gedoe)
+          env_path = os.environ["GITHUB_ENV"]
+          with open(env_path, "a", encoding="utf-8") as f:
+            f.write(f"NOW={now}\n")
+            f.write(f"UPT_STATUS={status_code}\n")
+            f.write(f"URL={murl}\n")
+            f.write(f"MSG={msg}\n")
+          PY
 
       - name: Notify Discord if state changed
         if: env.LAST != env.NOW
@@ -51,16 +98,19 @@ jobs:
           if [ "${{ env.NOW }}" = "DOWN" ]; then
             TITLE="🌐 Website status — OFFLINE"
             COLOR=15158332
-          else
+          elif [ "${{ env.NOW }}" = "UP" ]; then
             TITLE="🌐 Website status — HERSTELD"
             COLOR=3066993
+          else
+            TITLE="🌐 Website status — UNKNOWN"
+            COLOR=16776960
           fi
 
           curl -H "Content-Type: application/json" -X POST \
             -d "{
               \"embeds\": [{
                 \"title\": \"$TITLE\",
-                \"description\": \"${{ env.URL }}\\nHTTP: ${{ env.CODE }}\\nLAST: ${{ env.LAST }} → NOW: ${{ env.NOW }}\",
+                \"description\": \"${{ env.URL }}\\nUptimeRobot status: ${{ env.UPT_STATUS }} (${{ env.MSG }})\\nLAST: ${{ env.LAST }} → NOW: ${{ env.NOW }}\",
                 \"color\": $COLOR
               }]
             }" \
@@ -74,7 +124,7 @@ jobs:
             -d "{
               \"embeds\": [{
                 \"title\": \"🌐 Website status — OK\",
-                \"description\": \"Website is nog steeds online ✅\\n${{ env.URL }}\\nHTTP: ${{ env.CODE }}\",
+                \"description\": \"Website is nog steeds online ✅\\n${{ env.URL }}\\nUptimeRobot status: ${{ env.UPT_STATUS }}\",
                 \"color\": 3066993
               }]
             }" \
@@ -83,8 +133,4 @@ jobs:
       - name: Persist status
         run: |
           mkdir -p .status
-          if [ -f .status/now.txt ]; then
-            mv .status/now.txt .status/last.txt
-          else
-            echo "UNKNOWN" > .status/last.txt
-          fi
+          echo "${{ env.NOW }}" > .status/last.txt
