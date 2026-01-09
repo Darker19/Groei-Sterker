@@ -9,11 +9,15 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Restore last status (cache)
-        uses: actions/cache@v4
-        with:
-          path: .status
-          key: website-status-v1
+- name: Persist status
+  run: |
+    mkdir -p .status
+    if [ -f .status/now.txt ]; then
+      mv .status/now.txt .status/last.txt
+    else
+      echo "${{ env.NOW }}" > .status/last.txt
+    fi
+
 
       - name: Read last status
         run: |
