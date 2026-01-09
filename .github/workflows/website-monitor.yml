@@ -31,7 +31,8 @@ jobs:
       - name: Check website
         run: |
           URL="https://www.groei-sterker.nl"
-          CODE=$(curl -s -o /dev/null -m 10 -w "%{http_code}" "$URL" || echo "000")
+          CODE=$(curl -sS -L -o /dev/null -m 10 -w "%{http_code}" "$URL" || true)
+          [ -z "$CODE" ] && CODE="000"
 
           if [ "$CODE" -ge 200 ] && [ "$CODE" -lt 400 ]; then
             echo "UP" > .status/now.txt
@@ -61,6 +62,20 @@ jobs:
                 \"title\": \"$TITLE\",
                 \"description\": \"${{ env.URL }}\\nHTTP: ${{ env.CODE }}\\nLAST: ${{ env.LAST }} → NOW: ${{ env.NOW }}\",
                 \"color\": $COLOR
+              }]
+            }" \
+            "${{ secrets.DISCORD_WEBHOOK_DEPLOY }}"
+
+      - name: Daily heartbeat (still up)
+        if: github.event.schedule == '0 8 * * *' && env.NOW == 'UP'
+        continue-on-error: true
+        run: |
+          curl -H "Content-Type: application/json" -X POST \
+            -d "{
+              \"embeds\": [{
+                \"title\": \"🌐 Website status — OK\",
+                \"description\": \"Website is nog steeds online ✅\\n${{ env.URL }}\\nHTTP: ${{ env.CODE }}\",
+                \"color\": 3066993
               }]
             }" \
             "${{ secrets.DISCORD_WEBHOOK_DEPLOY }}"
