@@ -2,7 +2,7 @@ name: Pages preview → Hostnet deploy (FTP clean)
 
 on:
   push:
-    branches: [ main ]      # pas aan als jouw default branch anders heet
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -18,8 +18,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout (full history for logs)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Collect commit summary (last 5)
+        run: |
+          echo "CHANGES<<EOF" >> $GITHUB_ENV
+          git log -5 --pretty=format:"• %s" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Discord — Deploys gestart
+        run: |
+          curl -H "Content-Type: application/json" -X POST \
+            -d "{
+              \"embeds\": [{
+                \"title\": \"🚀 Deploys — Gestart\",
+                \"description\": \"**Wijzigingen (laatste 5 commits):**\n${{ env.CHANGES }}\n\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
+                \"color\": 3447003
+              }]
+            }" \
+            "${{ secrets.DISCORD_WEBHOOK }}"
 
       # Schone deploy-map zonder rommel
       - name: Prepare clean deploy folder (exclude junk)
@@ -70,10 +90,41 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+      - name: Discord — Deploys — GitHub Pages geslaagd
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" -X POST \
+            -d "{
+              \"embeds\": [{
+                \"title\": \"🚀 Deploys — GitHub Pages geslaagd\",
+                \"description\": \"Pages URL: ${{ steps.deployment.outputs.page_url }}\n\n**Wijzigingen (laatste 5 commits):**\n${{ needs.build.outputs.CHANGES }}\n\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
+                \"color\": 3066993
+              }]
+            }" \
+            \"${{ secrets.DISCORD_WEBHOOK }}\"
+        env:
+          # Fallback: we kunnen env van vorige job niet direct hergebruiken zonder artifacts/outputs.
+          # Daarom houden we deze message kort en zetten we de run-link + pages URL.
+          # (Zie note hieronder voor de "perfecte" variant met outputs.)
+          DUMMY: "1"
+
+      - name: Discord — Deploys — GitHub Pages gefaald
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" -X POST \
+            -d '{
+              "embeds":[{
+                "title":"🚀 Deploys — GitHub Pages gefaald",
+                "description":"Run: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
+                "color":15158332
+              }]
+            }' \
+            "${{ secrets.DISCORD_WEBHOOK }}"
+
   deploy_hostnet:
     needs: deploy_pages
     runs-on: ubuntu-latest
-    environment: production     # zorg dat deze Environment bestaat + Required reviewers
+    environment: production
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -81,7 +132,19 @@ jobs:
           name: site-dist
           path: site
 
-      - name: FTP deploy to Hostnet (DRY-RUN)
+      - name: Discord — Deploys — Hostnet gestart
+        run: |
+          curl -H "Content-Type: application/json" -X POST \
+            -d '{
+              "embeds":[{
+                "title":"🚀 Deploys — Hostnet gestart",
+                "description":"Site: groei-sterker.nl\nServer dir: '${{ env.SERVER_DIR }}'\nRun: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
+                "color":3447003
+              }]
+            }' \
+            "${{ secrets.DISCORD_WEBHOOK }}"
+
+      - name: FTP deploy to Hostnet
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.SFTP_HOST }}
@@ -97,3 +160,29 @@ jobs:
             .github/**
             README.md
             LICENSE
+
+      - name: Discord — Deploys — Hostnet geslaagd
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" -X POST \
+            -d '{
+              "embeds":[{
+                "title":"🚀 Deploys — Geslaagd",
+                "description":"Hostnet update voltooid ✅\nSite: groei-sterker.nl\nRun: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
+                "color":3066993
+              }]
+            }' \
+            "${{ secrets.DISCORD_WEBHOOK }}"
+
+      - name: Discord — Deploys — Hostnet gefaald
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" -X POST \
+            -d '{
+              "embeds":[{
+                "title":"🚀 Deploys — Gefaald",
+                "description":"Hostnet deploy faalde ❌\nSite: groei-sterker.nl\nRun: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
+                "color":15158332
+              }]
+            }' \
+            "${{ secrets.DISCORD_WEBHOOK }}"
