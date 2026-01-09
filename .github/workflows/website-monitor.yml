@@ -30,7 +30,7 @@ jobs:
 
       - name: Check website
         run: |
-          URL="https://www.groei-sterker.nl"
+          URL="https://groei-sterker.nl"
           CODE=$(curl -sS -L -o /dev/null -m 10 -w "%{http_code}" "$URL" || true)
           [ -z "$CODE" ] && CODE="000"
 
