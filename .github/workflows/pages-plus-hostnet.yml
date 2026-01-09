@@ -11,37 +11,49 @@ permissions:
   id-token: write
 
 env:
-  # JOUW webroot bij Hostnet (trailing slash verplicht)
   SERVER_DIR: "/customers/3/b/0/cebjgz0mr/webroots/sites/groei-sterker.nl/"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (full history for logs)
+      - name: Checkout (full history for commit summary)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Collect commit summary (last 5)
-        run: |
-          echo "CHANGES<<EOF" >> $GITHUB_ENV
-          git log -5 --pretty=format:"• %s" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
       - name: Discord — Deploys gestart
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          curl -H "Content-Type: application/json" -X POST \
-            -d "{
-              \"embeds\": [{
-                \"title\": \"🚀 Deploys — Gestart\",
-                \"description\": \"**Wijzigingen (laatste 5 commits):**\n${{ env.CHANGES }}\n\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
-                \"color\": 3447003
-              }]
-            }" \
-            "${{ secrets.DISCORD_WEBHOOK }}"
+          python3 - <<'PY'
+          import os, json, subprocess, urllib.request
 
-      # Schone deploy-map zonder rommel
+          webhook = os.environ["DISCORD_WEBHOOK"]
+          changes = subprocess.check_output(
+              ["git", "log", "-5", "--pretty=format:• %s"], text=True
+          ).strip() or "• (geen commit info)"
+
+          payload = {
+              "embeds": [{
+                  "title": "🚀 Deploys — Gestart",
+                  "description": f"**Wijzigingen (laatste 5 commits):**\n{changes}\n\n"
+                                 f"Repo: {os.environ.get('GITHUB_REPOSITORY')}\n"
+                                 f"Branch: {os.environ.get('GITHUB_REF_NAME')}\n"
+                                 f"Run: {os.environ.get('GITHUB_SERVER_URL')}/{os.environ.get('GITHUB_REPOSITORY')}/actions/runs/{os.environ.get('GITHUB_RUN_ID')}",
+                  "color": 3447003
+              }]
+          }
+
+          req = urllib.request.Request(
+              webhook,
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"},
+              method="POST"
+          )
+          urllib.request.urlopen(req).read()
+          PY
+
       - name: Prepare clean deploy folder (exclude junk)
         run: |
           mkdir -p deploy
@@ -66,13 +78,11 @@ jobs:
             --exclude='**/*.map' \
             ./ deploy/
 
-      # Preview naar GitHub Pages
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: deploy
 
-      # Zelfde build bewaren voor Hostnet
       - name: Upload CI artifact
         uses: actions/upload-artifact@v4
         with:
@@ -86,46 +96,77 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout (for commit summary)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
       - name: Discord — Deploys — GitHub Pages geslaagd
         if: success()
-        run: |
-          curl -H "Content-Type: application/json" -X POST \
-            -d "{
-              \"embeds\": [{
-                \"title\": \"🚀 Deploys — GitHub Pages geslaagd\",
-                \"description\": \"Pages URL: ${{ steps.deployment.outputs.page_url }}\n\n**Wijzigingen (laatste 5 commits):**\n${{ needs.build.outputs.CHANGES }}\n\nRun: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",
-                \"color\": 3066993
-              }]
-            }" \
-            \"${{ secrets.DISCORD_WEBHOOK }}\"
         env:
-          # Fallback: we kunnen env van vorige job niet direct hergebruiken zonder artifacts/outputs.
-          # Daarom houden we deze message kort en zetten we de run-link + pages URL.
-          # (Zie note hieronder voor de "perfecte" variant met outputs.)
-          DUMMY: "1"
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python3 - <<'PY'
+          import os, json, subprocess, urllib.request
+
+          webhook = os.environ["DISCORD_WEBHOOK"]
+          page_url = os.environ.get("PAGE_URL", "").strip()
+
+          changes = subprocess.check_output(
+              ["git", "log", "-5", "--pretty=format:• %s"], text=True
+          ).strip() or "• (geen commit info)"
+
+          run_url = f"{os.environ.get('GITHUB_SERVER_URL')}/{os.environ.get('GITHUB_REPOSITORY')}/actions/runs/{os.environ.get('GITHUB_RUN_ID')}"
+
+          payload = {
+              "embeds": [{
+                  "title": "🚀 Deploys — GitHub Pages geslaagd",
+                  "description": f"Pages URL: {page_url}\n\n"
+                                 f"**Wijzigingen (laatste 5 commits):**\n{changes}\n\n"
+                                 f"Run: {run_url}",
+                  "color": 3066993
+              }]
+          }
+
+          req = urllib.request.Request(
+              webhook,
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"},
+              method="POST"
+          )
+          urllib.request.urlopen(req).read()
+          PY
 
       - name: Discord — Deploys — GitHub Pages gefaald
         if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          curl -H "Content-Type: application/json" -X POST \
-            -d '{
-              "embeds":[{
-                "title":"🚀 Deploys — GitHub Pages gefaald",
-                "description":"Run: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
-                "color":15158332
-              }]
-            }' \
-            "${{ secrets.DISCORD_WEBHOOK }}"
+          python3 - <<'PY'
+          import os, json, urllib.request
+          webhook = os.environ["DISCORD_WEBHOOK"]
+          run_url = f"{os.environ.get('GITHUB_SERVER_URL')}/{os.environ.get('GITHUB_REPOSITORY')}/actions/runs/{os.environ.get('GITHUB_RUN_ID')}"
+          payload = {"embeds":[{"title":"🚀 Deploys — GitHub Pages gefaald","description":f"Run: {run_url}","color":15158332}]}
+          req = urllib.request.Request(webhook, data=json.dumps(payload).encode("utf-8"),
+                                       headers={"Content-Type":"application/json"}, method="POST")
+          urllib.request.urlopen(req).read()
+          PY
 
   deploy_hostnet:
     needs: deploy_pages
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - name: Checkout (for commit summary)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
@@ -133,16 +174,38 @@ jobs:
           path: site
 
       - name: Discord — Deploys — Hostnet gestart
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          curl -H "Content-Type: application/json" -X POST \
-            -d '{
-              "embeds":[{
-                "title":"🚀 Deploys — Hostnet gestart",
-                "description":"Site: groei-sterker.nl\nServer dir: '${{ env.SERVER_DIR }}'\nRun: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
-                "color":3447003
+          python3 - <<'PY'
+          import os, json, subprocess, urllib.request
+
+          webhook = os.environ["DISCORD_WEBHOOK"]
+          changes = subprocess.check_output(
+              ["git", "log", "-5", "--pretty=format:• %s"], text=True
+          ).strip() or "• (geen commit info)"
+
+          run_url = f"{os.environ.get('GITHUB_SERVER_URL')}/{os.environ.get('GITHUB_REPOSITORY')}/actions/runs/{os.environ.get('GITHUB_RUN_ID')}"
+          server_dir = os.environ.get("SERVER_DIR", "")
+
+          payload = {
+              "embeds": [{
+                  "title": "🚀 Deploys — Hostnet gestart",
+                  "description": f"Site: groei-sterker.nl\nServer dir: {server_dir}\n\n"
+                                 f"**Wijzigingen (laatste 5 commits):**\n{changes}\n\n"
+                                 f"Run: {run_url}",
+                  "color": 3447003
               }]
-            }' \
-            "${{ secrets.DISCORD_WEBHOOK }}"
+          }
+
+          req = urllib.request.Request(
+              webhook,
+              data=json.dumps(payload).encode("utf-8"),
+              headers={"Content-Type": "application/json"},
+              method="POST"
+          )
+          urllib.request.urlopen(req).read()
+          PY
 
       - name: FTP deploy to Hostnet
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
@@ -152,8 +215,8 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           protocol: ftp
           port: 21
-          local-dir: site/                     # trailing slash verplicht
-          server-dir: ${{ env.SERVER_DIR }}    # trailing slash verplicht
+          local-dir: site/
+          server-dir: ${{ env.SERVER_DIR }}
           exclude: |
             **/.git*
             **/node_modules/**
@@ -163,26 +226,32 @@ jobs:
 
       - name: Discord — Deploys — Hostnet geslaagd
         if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          curl -H "Content-Type: application/json" -X POST \
-            -d '{
-              "embeds":[{
-                "title":"🚀 Deploys — Geslaagd",
-                "description":"Hostnet update voltooid ✅\nSite: groei-sterker.nl\nRun: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
-                "color":3066993
-              }]
-            }' \
-            "${{ secrets.DISCORD_WEBHOOK }}"
+          python3 - <<'PY'
+          import os, json, subprocess, urllib.request
+          webhook = os.environ["DISCORD_WEBHOOK"]
+          changes = subprocess.check_output(["git","log","-5","--pretty=format:• %s"], text=True).strip() or "• (geen commit info)"
+          run_url = f"{os.environ.get('GITHUB_SERVER_URL')}/{os.environ.get('GITHUB_REPOSITORY')}/actions/runs/{os.environ.get('GITHUB_RUN_ID')}"
+          payload = {"embeds":[{"title":"🚀 Deploys — Geslaagd","description":f"Hostnet update voltooid ✅\n\n**Wijzigingen (laatste 5 commits):**\n{changes}\n\nRun: {run_url}","color":3066993}]}
+          req = urllib.request.Request(webhook, data=json.dumps(payload).encode("utf-8"),
+                                       headers={"Content-Type":"application/json"}, method="POST")
+          urllib.request.urlopen(req).read()
+          PY
 
       - name: Discord — Deploys — Hostnet gefaald
         if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          curl -H "Content-Type: application/json" -X POST \
-            -d '{
-              "embeds":[{
-                "title":"🚀 Deploys — Gefaald",
-                "description":"Hostnet deploy faalde ❌\nSite: groei-sterker.nl\nRun: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'",
-                "color":15158332
-              }]
-            }' \
-            "${{ secrets.DISCORD_WEBHOOK }}"
+          python3 - <<'PY'
+          import os, json, subprocess, urllib.request
+          webhook = os.environ["DISCORD_WEBHOOK"]
+          changes = subprocess.check_output(["git","log","-5","--pretty=format:• %s"], text=True).strip() or "• (geen commit info)"
+          run_url = f"{os.environ.get('GITHUB_SERVER_URL')}/{os.environ.get('GITHUB_REPOSITORY')}/actions/runs/{os.environ.get('GITHUB_RUN_ID')}"
+          payload = {"embeds":[{"title":"🚀 Deploys — Gefaald","description":f"Hostnet deploy faalde ❌\n\n**Wijzigingen (laatste 5 commits):**\n{changes}\n\nRun: {run_url}","color":15158332}]}
+          req = urllib.request.Request(webhook, data=json.dumps(payload).encode("utf-8"),
+                                       headers={"Content-Type":"application/json"}, method="POST")
+          urllib.request.urlopen(req).read()
+          PY
