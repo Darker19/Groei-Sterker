@@ -1,0 +1,66 @@
+name: Website monitor
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # elke 5 minuten
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore last status (cache)
+        uses: actions/cache@v4
+        with:
+          path: .status
+          key: website-status-v1
+
+      - name: Read last status
+        run: |
+          mkdir -p .status
+          if [ -f .status/last.txt ]; then
+            cat .status/last.txt
+          else
+            echo "UNKNOWN" > .status/last.txt
+          fi
+          echo "LAST=$(cat .status/last.txt)" >> $GITHUB_ENV
+
+      - name: Check website
+        run: |
+          URL="https://jouwdomein.nl"
+          CODE=$(curl -s -o /dev/null -m 10 -w "%{http_code}" "$URL" || echo "000")
+
+          if [ "$CODE" -ge 200 ] && [ "$CODE" -lt 400 ]; then
+            echo "UP" > .status/now.txt
+          else
+            echo "DOWN" > .status/now.txt
+          fi
+
+          echo "NOW=$(cat .status/now.txt)" >> $GITHUB_ENV
+          echo "CODE=$CODE" >> $GITHUB_ENV
+          echo "URL=$URL" >> $GITHUB_ENV
+
+      - name: Notify Discord if state changed
+        if: env.LAST != env.NOW
+        run: |
+          if [ "${{ env.NOW }}" = "DOWN" ]; then
+            TITLE="🌐 Website status — OFFLINE"
+            COLOR=15158332
+          else
+            TITLE="🌐 Website status — HERSTELD"
+            COLOR=3066993
+          fi
+
+          curl -H "Content-Type: application/json" -X POST \
+            -d "{
+              \"embeds\": [{
+                \"title\": \"$TITLE\",
+                \"description\": \"${{ env.URL }}\\nHTTP: ${{ env.CODE }}\",
+                \"color\": $COLOR
+              }]
+            }" \
+            "${{ secrets.DISCORD_WEBHOOK }}"
+
+      - name: Persist status
+        run: |
+          mv .status/now.txt .status/last.txt
