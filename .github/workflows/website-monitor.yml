@@ -59,7 +59,7 @@ jobs:
                 \"color\": $COLOR
               }]
             }" \
-            "${{ secrets.DISCORD_WEBHOOK }}"
+            "${{ secrets.DISCORD_WEBHOOK_DEPLOY }}"
 
       - name: Persist status
         run: |
