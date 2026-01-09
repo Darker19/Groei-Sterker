@@ -3,6 +3,7 @@ name: Website monitor
 on:
   schedule:
     - cron: "*/5 * * * *"
+    - cron: "0 8 * * *"   # elke dag 08:00
   workflow_dispatch: {}
 
 jobs:
