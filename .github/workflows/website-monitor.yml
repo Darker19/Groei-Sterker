@@ -2,36 +2,34 @@ name: Website monitor
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # elke 5 minuten
+    - cron: "*/5 * * * *"
   workflow_dispatch: {}
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-- name: Persist status
-  run: |
-    mkdir -p .status
-    if [ -f .status/now.txt ]; then
-      mv .status/now.txt .status/last.txt
-    else
-      echo "${{ env.NOW }}" > .status/last.txt
-    fi
-
+      - name: Restore last status (cache)
+        uses: actions/cache@v4
+        with:
+          path: .status
+          key: website-status-${{ github.run_id }}
+          restore-keys: |
+            website-status-
 
       - name: Read last status
         run: |
           mkdir -p .status
           if [ -f .status/last.txt ]; then
-            cat .status/last.txt
+            echo "LAST=$(cat .status/last.txt)" >> $GITHUB_ENV
           else
             echo "UNKNOWN" > .status/last.txt
+            echo "LAST=UNKNOWN" >> $GITHUB_ENV
           fi
-          echo "LAST=$(cat .status/last.txt)" >> $GITHUB_ENV
 
       - name: Check website
         run: |
-          URL="https://www.groei-sterker.nl/dit-bestaat-niet-123"
+          URL="https://www.groei-sterker.nl"
           CODE=$(curl -s -o /dev/null -m 10 -w "%{http_code}" "$URL" || echo "000")
 
           if [ "$CODE" -ge 200 ] && [ "$CODE" -lt 400 ]; then
@@ -46,6 +44,7 @@ jobs:
 
       - name: Notify Discord if state changed
         if: env.LAST != env.NOW
+        continue-on-error: true
         run: |
           if [ "${{ env.NOW }}" = "DOWN" ]; then
             TITLE="🌐 Website status — OFFLINE"
@@ -59,7 +58,7 @@ jobs:
             -d "{
               \"embeds\": [{
                 \"title\": \"$TITLE\",
-                \"description\": \"${{ env.URL }}\\nHTTP: ${{ env.CODE }}\",
+                \"description\": \"${{ env.URL }}\\nHTTP: ${{ env.CODE }}\\nLAST: ${{ env.LAST }} → NOW: ${{ env.NOW }}\",
                 \"color\": $COLOR
               }]
             }" \
@@ -67,4 +66,9 @@ jobs:
 
       - name: Persist status
         run: |
-          mv .status/now.txt .status/last.txt
+          mkdir -p .status
+          if [ -f .status/now.txt ]; then
+            mv .status/now.txt .status/last.txt
+          else
+            echo "UNKNOWN" > .status/last.txt
+          fi
