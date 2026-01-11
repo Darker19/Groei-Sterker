@@ -2,9 +2,14 @@ name: Website monitor (via UptimeRobot)
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
-    - cron: "0 8 * * *"   # elke dag 08:00
+    # Elke 5 minuten, behalve in het uur 08 (dan doet de heartbeat-cron het)
+    - cron: "*/5 0-7,9-23 * * *"
+    - cron: "0 8 * * *"   # elke dag 08:00 heartbeat
   workflow_dispatch: {}
+
+concurrency:
+  group: website-monitor
+  cancel-in-progress: true
 
 jobs:
   check:
@@ -28,12 +33,13 @@ jobs:
             echo "LAST=UNKNOWN" >> $GITHUB_ENV
           fi
 
-      - name: Fetch status from UptimeRobot API
+      - name: Fetch status from UptimeRobot API (robust)
         env:
           UPTIMEROBOT_API_KEY: ${{ secrets.UPTIMEROBOT_API_KEY }}
         run: |
           python3 - <<'PY'
-          import os, json, urllib.request, urllib.parse
+          import os, json, time, socket, urllib.request, urllib.parse
+          from urllib.error import URLError, HTTPError
 
           api_key = os.environ.get("UPTIMEROBOT_API_KEY")
           if not api_key:
@@ -53,22 +59,45 @@ jobs:
             method="POST"
           )
 
-          with urllib.request.urlopen(req, timeout=20) as r:
-            body = r.read().decode("utf-8")
+          payload = None
+          last_err = None
 
-          payload = json.loads(body)
+          attempts = 5
+          timeout_s = 45
 
-          monitors = payload.get("monitors", [])
-          if not monitors:
-            # monitor-specific keys zouden 1 monitor terug moeten geven
-            now = "UNKNOWN"
-            status_code = "NA"
-            murl = "(no monitor returned)"
-            msg = "No monitor returned from API"
-          else:
+          for i in range(attempts):
+            try:
+              with urllib.request.urlopen(req, timeout=timeout_s) as r:
+                body = r.read().decode("utf-8")
+              payload = json.loads(body)
+              last_err = None
+              break
+            except (TimeoutError, socket.timeout) as e:
+              last_err = f"TIMEOUT({e})"
+            except HTTPError as e:
+              # bijv. 429 rate limit, 5xx, etc.
+              last_err = f"HTTP_{e.code}"
+            except URLError as e:
+              last_err = f"URLERR({e.reason})"
+            except Exception as e:
+              last_err = f"ERR({type(e).__name__})"
+
+            # exponential backoff (max 20s)
+            sleep_s = min(2 * (2 ** i), 20)
+            time.sleep(sleep_s)
+
+          # defaults als API faalt
+          now = "UNKNOWN"
+          status_code = "NA"
+          murl = "(unknown)"
+          msg = "API_ERROR" if last_err else "UNKNOWN"
+
+          monitors = (payload or {}).get("monitors", [])
+          if monitors:
             m = monitors[0]
             status = int(m.get("status", -1))
             murl = m.get("url") or m.get("friendly_name") or "(unknown)"
+
             # UptimeRobot status codes: 2=up, 8=seems down, 9=down, 0=paused, 1=not checked yet
             if status == 2:
               now = "UP"
@@ -81,8 +110,13 @@ jobs:
               msg = f"STATUS_{status}"
 
             status_code = str(status)
+          else:
+            # onderscheid maken tussen "geen monitor" en "API error"
+            if last_err:
+              msg = f"API_{last_err}"
+            else:
+              msg = "No monitor returned from API"
 
-          # schrijf naar GITHUB_ENV (single-line, geen EOF gedoe)
           env_path = os.environ["GITHUB_ENV"]
           with open(env_path, "a", encoding="utf-8") as f:
             f.write(f"NOW={now}\n")
