@@ -1187,3 +1187,44 @@ a:active {
     font-size: 0.9rem;
   }
 }
+
+/* Force-visible debug (mag later weer subtieler) */
+.footer-ticker {
+  display: block;
+  width: 100%;
+  position: relative;
+  z-index: 9999;
+  overflow: hidden;
+
+  background: #ffffff;
+  /* tijdelijk opvallend */
+  border-top: 2px solid #000;
+  /* tijdelijk opvallend */
+  padding: 12px 0;
+  min-height: 44px;
+}
+
+.footer-ticker .ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  width: max-content;
+  animation: tickerScroll 22s linear infinite;
+}
+
+.footer-ticker .ticker-track span {
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+@keyframes tickerScroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
