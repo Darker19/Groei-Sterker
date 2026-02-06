@@ -97,7 +97,7 @@
             for (let i = 0; i < loops; i++) {
               for (const text of items) {
                 const span = document.createElement("span");
-                span.textContent = text + " •";
+                span.textContent = text; // separator
                 rail.appendChild(span);
               }
             }

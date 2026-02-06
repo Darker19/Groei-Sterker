@@ -1176,3 +1176,27 @@ a:active {
 .footer-ticker:hover {
   cursor: default;
 }
+
+/* 1) haal alle extra spacing weg */
+.footer-ticker .rail {
+  display: flex;
+  gap: 0 !important;
+  /* belangrijk: geen gap */
+}
+
+.footer-ticker .rail span {
+  margin: 0 !important;
+  /* geen onverwachte marges */
+  padding: 0 !important;
+  white-space: nowrap;
+}
+
+/* 2) separator VOOR elk item behalve de eerste */
+.footer-ticker .rail span+span::before {
+  content: "•";
+  display: inline-block;
+  margin: 0 18px;
+  /* ruimte links/rechts */
+
+  transform: translateY(-0.02em);
+}
