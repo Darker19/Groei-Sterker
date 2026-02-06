@@ -1145,13 +1145,21 @@ a:active {
 
 /* text-carousel */
 .footer-ticker {
-  width: 100%;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
   overflow: hidden;
   background: rgba(255, 255, 255, 0.35);
-  /* zacht over je peach */
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 10px 0;
+
+  padding: 8px 0;
+  margin-top: -20px;
 }
+
 
 .footer-ticker .ticker-track {
   display: flex;
