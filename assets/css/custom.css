@@ -1193,3 +1193,15 @@ a:active {
     transform: translateX(-50%);
   }
 }
+
+.gs-ticker-wrap {
+  gap: 0;
+}
+
+.gs-ticker-track {
+  flex: 0 0 auto;
+}
+
+.gs-ticker-wrap {
+  will-change: transform;
+}
