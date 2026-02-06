@@ -1148,45 +1148,41 @@ a:active {
   width: 100vw;
   position: relative;
   left: 50%;
-  right: 50%;
   margin-left: -50vw;
-  margin-right: -50vw;
 
   overflow: hidden;
   background: rgba(255, 255, 255, 0.35);
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-
   padding: 8px 0;
-  margin-top: -20px;
 }
 
-
-.footer-ticker .ticker-track {
+/* container van 2 tracks */
+.ticker-wrap {
   display: flex;
-  align-items: center;
-  gap: 56px;
-  width: 200%;
+  width: max-content;
   animation: tickerScroll 26s linear infinite;
 }
 
-.footer-ticker:hover .ticker-track {
+.footer-ticker:hover .ticker-wrap {
   animation-play-state: paused;
 }
 
-.footer-ticker .ticker-track span {
+/* elke track */
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 56px;
   white-space: nowrap;
-  font-weight: 600;
+}
+
+/* tekst */
+.ticker-track span {
   font-size: 0.95rem;
+  font-weight: 600;
   color: rgba(0, 0, 0, 0.72);
 }
 
-/* optioneel: puntje na elk item */
-.footer-ticker .ticker-track span::after {
-  content: " •";
-  margin-left: 18px;
-  opacity: 0.35;
-}
-
+/* animatie */
 @keyframes tickerScroll {
   from {
     transform: translateX(0);
@@ -1194,16 +1190,5 @@ a:active {
 
   to {
     transform: translateX(-50%);
-  }
-}
-
-/* mobile */
-@media (max-width: 600px) {
-  .footer-ticker .ticker-track {
-    gap: 34px;
-  }
-
-  .footer-ticker .ticker-track span {
-    font-size: 0.9rem;
   }
 }
