@@ -1144,32 +1144,34 @@ a:active {
 }
 
 /* text-carousel */
-.text-carousel {
-  overflow: hidden;
+.footer-ticker {
   width: 100%;
-  background: transparent;
+  overflow: hidden;
+  background: #f6f6f6;
+  /* pas aan aan je footer-kleur */
+  border-top: 1px solid #ddd;
+  padding: 12px 0;
 }
 
-.text-track {
+.ticker-track {
   display: flex;
   gap: 60px;
   width: max-content;
-  animation: textscroll 18s linear infinite;
+  animation: tickerScroll 22s linear infinite;
 }
 
-.text-carousel:hover .text-track {
+.footer-ticker:hover .ticker-track {
   animation-play-state: paused;
 }
 
-.slide {
-  font-size: 1.2rem;
-  font-weight: 600;
+.ticker-track span {
   white-space: nowrap;
-  color: #2a2a2a;
-  opacity: 0.85;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
 }
 
-@keyframes textscroll {
+@keyframes tickerScroll {
   from {
     transform: translateX(0);
   }
@@ -1181,7 +1183,7 @@ a:active {
 
 /* mobiel */
 @media (max-width: 600px) {
-  .slide {
-    font-size: 1rem;
+  .ticker-track span {
+    font-size: 0.9rem;
   }
 }
