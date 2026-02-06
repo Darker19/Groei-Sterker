@@ -1144,33 +1144,22 @@ a:active {
 }
 
 /* text-carousel */
-.marquee {
+.scrolling-text {
   width: 100%;
   overflow: hidden;
-  background: #f5f5f5;
-  padding: 10px 0;
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
   white-space: nowrap;
-  animation: marqueeScroll 20s linear infinite;
+  box-sizing: border-box;
+  animation: scroll 10s linear infinite;
 }
 
-.marquee-track span {
-  white-space: nowrap;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-}
 
-@keyframes marqueeScroll {
-  from {
-    transform: translateX(0);
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
   }
 
-  to {
-    transform: translateX(-50%);
+  100% {
+    transform: translateX(-100%);
   }
+}
 }
