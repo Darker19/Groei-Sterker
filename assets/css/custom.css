@@ -1154,25 +1154,21 @@ a:active {
   background: rgba(255, 255, 255, 0.35);
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   padding: 8px 0;
-  margin-top: -20px;
 }
 
+/* dit element beweegt */
 .gs-ticker-wrap {
   display: flex;
   width: max-content;
-  will-change: transform;
-  animation: gsTickerScroll 26s linear infinite;
+  animation: gsTickerScroll 30s linear infinite;
 }
 
-.footer-ticker:hover .gs-ticker-wrap {
-  animation-play-state: paused;
-}
-
+/* twee identieke banen */
 .gs-ticker-track {
   display: flex;
   align-items: center;
-  white-space: nowrap;
   gap: 56px;
+  white-space: nowrap;
 }
 
 .gs-ticker-item {
@@ -1184,8 +1180,8 @@ a:active {
 
 .gs-ticker-item::after {
   content: " •";
-  opacity: 0.35;
   margin-left: 18px;
+  opacity: .35;
 }
 
 @keyframes gsTickerScroll {
