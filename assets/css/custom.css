@@ -1143,26 +1143,8 @@ a:active {
   }
 }
 
-/* text-carousel */
-.scrolling-text {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  box-sizing: border-box;
-  animation: scroll 20s linear infinite;
-}
 
-
-@keyframes scroll {
-  0% {
-    transform: translateX(100%);
-  }
-
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
+/* Footer ticker - edge to edge */
 .footer-ticker {
   width: 100vw;
   position: relative;
@@ -1175,11 +1157,12 @@ a:active {
   padding: 8px 0;
 }
 
+/* Items row */
 .footer-ticker .rail {
   display: flex;
   align-items: center;
   gap: 40px;
-  will-change: transform;
+  white-space: nowrap;
 }
 
 .footer-ticker .rail span {
@@ -1187,4 +1170,9 @@ a:active {
   font-weight: 600;
   font-size: 0.95rem;
   color: rgba(0, 0, 0, 0.72);
+}
+
+/* optioneel: pauze op hover (werkt omdat GSAP timescale gebruikt) */
+.footer-ticker:hover {
+  cursor: default;
 }
