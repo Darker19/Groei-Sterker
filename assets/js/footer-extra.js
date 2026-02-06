@@ -53,38 +53,7 @@
         }
       }
     });
-    // --- Ticker (tekst lintje) ---
-    const tickerRoot = document.getElementById('gsTicker');
-    if (tickerRoot && !tickerRoot.dataset.ready) {
-      const tickerItems = [
-        "Contractvrij & persoonlijke zorg",
-        "Gespecialiseerd in kinderfysiotherapie",
-        "Geen wachttijd",
-        "Maatwerk per kind"
-      ];
 
-      const wrap = document.createElement('div');
-      wrap.className = 'gs-ticker-wrap';
-
-      const makeTrack = () => {
-        const track = document.createElement('div');
-        track.className = 'gs-ticker-track';
-        tickerItems.forEach(text => {
-          const span = document.createElement('span');
-          span.className = 'gs-ticker-item';
-          span.textContent = text;
-          track.appendChild(span);
-        });
-        return track;
-      };
-
-      // 2 identieke tracks => perfecte naadloze loop
-      wrap.appendChild(makeTrack());
-      wrap.appendChild(makeTrack());
-      tickerRoot.appendChild(wrap);
-
-      tickerRoot.dataset.ready = "1";
-    }
   };
 
   // normaliseren van tekst (accenten weg, spaties opschonen, lower)

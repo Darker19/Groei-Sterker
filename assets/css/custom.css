@@ -1144,47 +1144,26 @@ a:active {
 }
 
 /* text-carousel */
-.footer-ticker {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  margin-left: -50vw;
-
+.marquee {
+  width: 100%;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.35);
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 8px 0;
+  background: #f5f5f5;
+  padding: 10px 0;
 }
 
-/* dit element beweegt */
-.gs-ticker-wrap {
-  display: flex;
+.marquee-inner {
   width: max-content;
-  animation: gsTickerScroll 30s linear infinite;
-}
-
-/* twee identieke banen */
-.gs-ticker-track {
-  display: flex;
-  align-items: center;
-  gap: 56px;
   white-space: nowrap;
+  animation: marqueeScroll 20s linear infinite;
 }
 
-.gs-ticker-item {
+.marquee-inner span {
+  font-size: 1rem;
   font-weight: 600;
-  font-size: 0.95rem;
-  color: rgba(0, 0, 0, 0.72);
-  white-space: nowrap;
+  color: #333;
 }
 
-.gs-ticker-item::after {
-  content: " •";
-  margin-left: 18px;
-  opacity: .35;
-}
-
-@keyframes gsTickerScroll {
+@keyframes marqueeScroll {
   from {
     transform: translateX(0);
   }
@@ -1192,16 +1171,4 @@ a:active {
   to {
     transform: translateX(-50%);
   }
-}
-
-.gs-ticker-wrap {
-  gap: 0;
-}
-
-.gs-ticker-track {
-  flex: 0 0 auto;
-}
-
-.gs-ticker-wrap {
-  will-change: transform;
 }
