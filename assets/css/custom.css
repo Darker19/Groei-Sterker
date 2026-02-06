@@ -1162,3 +1162,29 @@ a:active {
     transform: translateX(-100%);
   }
 }
+
+.footer-ticker {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.35);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 8px 0;
+}
+
+.footer-ticker .rail {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  will-change: transform;
+}
+
+.footer-ticker .rail span {
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: rgba(0, 0, 0, 0.72);
+}

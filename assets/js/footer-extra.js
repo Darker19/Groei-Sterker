@@ -53,6 +53,33 @@
         }
       }
     });
+    // --- Footer ticker ---
+    if (window.gsap) {
+      const rail = document.querySelector(".footer-ticker .rail");
+
+      if (rail) {
+        const items = [
+          "Contractvrij & persoonlijke zorg",
+          "Gespecialiseerd in kinderfysiotherapie",
+          "Geen wachttijd",
+          "Maatwerk per kind"
+        ];
+
+        // teksten toevoegen
+        items.forEach(text => {
+          const span = document.createElement("span");
+          span.textContent = text + " •";
+          rail.appendChild(span);
+        });
+
+        // loop starten
+        horizontalLoop(gsap.utils.toArray(".footer-ticker .rail span"), {
+          repeat: -1,
+          speed: 0.7,
+          paddingRight: 40
+        });
+      }
+    }
 
   };
 
