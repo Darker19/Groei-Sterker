@@ -1151,13 +1151,15 @@ a:active {
   padding: 10px 0;
 }
 
-.marquee-inner {
+.marquee-track {
+  display: flex;
   width: max-content;
   white-space: nowrap;
   animation: marqueeScroll 20s linear infinite;
 }
 
-.marquee-inner span {
+.marquee-track span {
+  white-space: nowrap;
   font-size: 1rem;
   font-weight: 600;
   color: #333;
