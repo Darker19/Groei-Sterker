@@ -1207,10 +1207,3 @@ a:active {
     font-size: 0.9rem;
   }
 }
-
-/* toegankelijk */
-@media (prefers-reduced-motion: reduce) {
-  .footer-ticker .ticker-track {
-    animation: none;
-  }
-}
