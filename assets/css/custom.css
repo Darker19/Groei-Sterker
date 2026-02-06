@@ -1165,7 +1165,7 @@ a:active {
   display: flex;
   align-items: center;
   gap: 56px;
-  width: max-content;
+  width: 200%;
   animation: tickerScroll 26s linear infinite;
 }
 
