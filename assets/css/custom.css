@@ -1154,36 +1154,41 @@ a:active {
   background: rgba(255, 255, 255, 0.35);
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   padding: 8px 0;
+  margin-top: -20px;
 }
 
-/* container van 2 tracks */
-.ticker-wrap {
+.gs-ticker-wrap {
   display: flex;
   width: max-content;
-  animation: tickerScroll 26s linear infinite;
+  will-change: transform;
+  animation: gsTickerScroll 26s linear infinite;
 }
 
-.footer-ticker:hover .ticker-wrap {
+.footer-ticker:hover .gs-ticker-wrap {
   animation-play-state: paused;
 }
 
-/* elke track */
-.ticker-track {
+.gs-ticker-track {
   display: flex;
   align-items: center;
+  white-space: nowrap;
   gap: 56px;
+}
+
+.gs-ticker-item {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: rgba(0, 0, 0, 0.72);
   white-space: nowrap;
 }
 
-/* tekst */
-.ticker-track span {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.72);
+.gs-ticker-item::after {
+  content: " •";
+  opacity: 0.35;
+  margin-left: 18px;
 }
 
-/* animatie */
-@keyframes tickerScroll {
+@keyframes gsTickerScroll {
   from {
     transform: translateX(0);
   }
