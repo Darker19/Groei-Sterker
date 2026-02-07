@@ -1203,9 +1203,10 @@ a:active {
   }
 
   to {
-    transform: translateX(-50%);
+    transform: translateX(calc(-1 * var(--loop-width, 0px)));
   }
 }
+
 
 .text-item {
   font-size: 2rem;

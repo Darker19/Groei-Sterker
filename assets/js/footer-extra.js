@@ -44,8 +44,11 @@
   }
 
   function isInThead(row) {
-    // werkt ook als browser closest() niet heeft
     return !!(row && row.parentElement && row.parentElement.tagName === "THEAD");
+  }
+
+  function raf(fn) {
+    requestAnimationFrame(() => requestAnimationFrame(fn));
   }
 
   // ============================
@@ -69,7 +72,6 @@
         r.querySelector?.(".day-icon")?.remove();
       }
 
-      // loop body-rijen
       for (const r of rows) {
         if (isInThead(r) || (r.closest && r.closest("thead"))) continue;
 
@@ -98,20 +100,26 @@
             img.alt = "Vandaag";
             img.className = "day-icon";
             img.loading = "lazy";
-            // inline fallback als CSS nog niet klaar is
             img.style.height = "1.25em";
             img.style.width = "auto";
             iconCell.prepend(img);
           }
-          break; // één match per tabel is genoeg
+          break;
         }
       }
     });
   }
 
   // ============================
-  // 2) Horizontal text scroll fillers (★)
-  // Vereist HTML: <div class="text-scroll"></div>
+  // 2) Horizontal text scroll (naadloos)
+  // Vereist HTML:
+  // <div class="infinite-scroll">
+  //   <div class="text-scroll"></div>
+  //   <div class="text-scroll clone" aria-hidden="true"></div>
+  // </div>
+  //
+  // CSS keyframes moeten eindigen op:
+  // transform: translateX(calc(-1 * var(--loop-width, 0px)));
   // ============================
   function initTextScrolls() {
     const originals = document.querySelectorAll(".text-scroll:not(.clone)");
@@ -120,37 +128,66 @@
     const iconSrc = new URL("assets/images/Vlinder.png", document.baseURI).href;
 
     originals.forEach((orig) => {
-      const clone = orig.parentElement.querySelector(".text-scroll.clone");
+      const rail = orig.closest(".infinite-scroll");
+      const clone = rail ? rail.querySelector(".text-scroll.clone") : null;
 
+      // reset
       orig.innerHTML = "";
       if (clone) clone.innerHTML = "";
 
-      // bouw 1 set
+      // bouw 1 set (icoon alleen TUSSEN items)
       SCROLL_ITEMS.forEach((text, i) => {
-
         const textItem = document.createElement("span");
         textItem.className = "text-item";
         textItem.textContent = text;
         orig.appendChild(textItem);
 
-        // icoon alleen TUSSEN items
         if (i < SCROLL_ITEMS.length - 1) {
           const icon = document.createElement("img");
           icon.src = iconSrc;
           icon.alt = "";
           icon.className = "scroll-icon";
+          icon.loading = "lazy";
           orig.appendChild(icon);
         }
       });
 
       // clone exact dezelfde inhoud
-      if (clone) {
-        clone.innerHTML = orig.innerHTML;
+      if (clone) clone.innerHTML = orig.innerHTML;
+
+      // breedte meten + zetten op rail als CSS var
+      if (rail) {
+        const measure = () => {
+          const w = orig.getBoundingClientRect().width;
+          rail.style.setProperty("--loop-width", `${w}px`);
+        };
+
+        // wacht tot images geladen zijn (kan invloed hebben op breedte)
+        const imgs = orig.querySelectorAll("img.scroll-icon");
+        let pending = imgs.length;
+
+        if (!pending) {
+          raf(measure);
+        } else {
+          const done = () => {
+            pending--;
+            if (pending <= 0) raf(measure);
+          };
+          imgs.forEach((img) => {
+            if (img.complete) done();
+            else {
+              img.addEventListener("load", done, { once: true });
+              img.addEventListener("error", done, { once: true });
+            }
+          });
+        }
+
+        // herberekenen bij resize (fonts/layout changes)
+        const onResize = () => raf(measure);
+        window.addEventListener("resize", onResize);
       }
     });
   }
-
-
 
   // ============================
   // Run on footer:loaded + fallback
