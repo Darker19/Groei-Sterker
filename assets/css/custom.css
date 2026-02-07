@@ -1143,60 +1143,63 @@ a:active {
   }
 }
 
-/* scrilling text */
+/* ============================
+   Scrolling text ticker
+============================ */
 
 .main-container {
   width: 100%;
-  margin: 0;
-  padding: 0;
   overflow-x: hidden;
-  display: flex;
-  min-height: 10px;
   color: #100c0d;
 }
 
 .scroll-container {
-  flex-grow: 1;
   overflow: hidden;
 }
 
 .text-row {
-  white-space: nowrap;
-  padding: 10px 0;
   display: flex;
   align-items: center;
+  padding: 10px 0;
   background-color: #ffd0b6;
 }
 
-/* DIT is de rail die beweegt */
+/* Bewegende rail */
 .infinite-scroll {
   display: flex;
   width: max-content;
   white-space: nowrap;
   will-change: transform;
   animation: scroll 40s linear infinite;
-  gap: 1.25rem;
 }
 
-/* GEEN animatie hier */
+/* Inhoud */
 .text-scroll {
   display: inline-flex;
   align-items: center;
-  gap: 1.25rem;
   white-space: nowrap;
 }
 
-.text-item,
+/* Tekst */
+.text-item {
+  font-size: 2rem;
+  font-weight: 800;
+  white-space: nowrap;
+  padding: 0 18px;
+  /* ruimte rond woord */
+}
+
+/* Icoon separator */
 .scroll-icon {
-  flex: 0 0 auto;
-  /* ✅ voorkomt proppen */
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin: 0 12px;
+  /* ruimte rond icoon */
+  vertical-align: middle;
 }
 
-.text-scroll,
-.text-scroll * {
-  box-sizing: border-box;
-}
-
+/* Animatie */
 @keyframes scroll {
   from {
     transform: translateX(0);
@@ -1207,48 +1210,14 @@ a:active {
   }
 }
 
-/* Basis styling voor tekstitems */
-.text-item {
-  font-size: 2rem;
-  font-weight: 800;
-}
+/* Kleiner op mobiel, en minder ruimte rond tekst/icoon */
+@media (max-width: 768px) {
+  .text-item {
+    font-size: 1.4rem;
+  }
 
-.scroll-icon {
-  height: 28px;
-  width: auto;
-  flex: 0 0 auto;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-/* voorkom dat tekst/icoon in elkaar schuift */
-.text-scroll {
-  display: inline-flex !important;
-  align-items: center !important;
-  white-space: nowrap !important;
-  gap: 0 !important;
-  /* we sturen spacing via separator */
-}
-
-.text-item {
-  display: inline-block !important;
-  white-space: nowrap !important;
-  padding: 0 18px !important;
-  /* ruimte rondom elk woord */
-  flex: 0 0 auto !important;
-}
-
-.scroll-icon {
-  display: inline-block !important;
-  width: 32px !important;
-  /* vaste ruimte */
-  height: 32px !important;
-  object-fit: contain !important;
-  margin: 0 !important;
-  padding: 0 12px !important;
-  /* extra lucht om icoon */
-  flex: 0 0 auto !important;
-  vertical-align: middle !important;
-  position: relative !important;
-  top: 0 !important;
+  .scroll-icon {
+    width: 22px;
+    height: 22px;
+  }
 }
