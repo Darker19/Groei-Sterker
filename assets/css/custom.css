@@ -1175,6 +1175,7 @@ a:active {
   white-space: nowrap;
   will-change: transform;
   animation: scroll 40s linear infinite;
+  gap: 1.25rem;
 }
 
 /* GEEN animatie hier */
@@ -1183,6 +1184,12 @@ a:active {
   align-items: center;
   gap: 1.25rem;
   white-space: nowrap;
+}
+
+.text-item,
+.scroll-icon {
+  flex: 0 0 auto;
+  /* ✅ voorkomt proppen */
 }
 
 .text-scroll,
