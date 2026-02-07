@@ -110,40 +110,30 @@
   }
 
   // ============================
-  // 2) Text scroll fillers (★)
+  // 2) Horizontal text scroll fillers (★)
+  // Vereist HTML: <div class="text-scroll"></div>
   // ============================
   function initTextScrolls() {
     const horizontalTextScroll = document.querySelectorAll(".text-scroll");
-    const verticalTextScroll = document.querySelectorAll(".vertical-text-scroll");
-
-    if (!horizontalTextScroll.length && !verticalTextScroll.length) return;
+    if (!horizontalTextScroll.length) return;
 
     // reset
     horizontalTextScroll.forEach((el) => (el.innerHTML = ""));
-    verticalTextScroll.forEach((el) => (el.innerHTML = ""));
 
     // build
     SCROLL_ITEMS.forEach((text) => {
-      // horizontaal
       horizontalTextScroll.forEach((scrollItem) => {
         const textItem = document.createElement("span");
         textItem.classList.add("text-item");
         textItem.textContent = text;
         scrollItem.appendChild(textItem);
 
-        const star = createStar();
+        const star = document.createElement("span");
         star.classList.add("star");
+        star.textContent = "★";
         scrollItem.appendChild(star);
       });
-
-
     });
-
-    function createStar() {
-      const star = document.createElement("span");
-      star.textContent = "★";
-      return star;
-    }
   }
 
   // ============================
