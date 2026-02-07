@@ -1144,7 +1144,7 @@ a:active {
 }
 
 /* ============================
-   Scrolling text ticker
+   Scrolling text ticker (robust)
 ============================ */
 
 .main-container {
@@ -1153,19 +1153,19 @@ a:active {
   color: #100c0d;
 }
 
-.scroll-container {
+.main-container .scroll-container {
   overflow: hidden;
 }
 
-.text-row {
+.main-container .text-row {
   display: flex;
   align-items: center;
   padding: 10px 0;
   background-color: #ffd0b6;
+  white-space: nowrap;
 }
 
-/* Bewegende rail */
-.infinite-scroll {
+.main-container .infinite-scroll {
   display: flex;
   width: max-content;
   white-space: nowrap;
@@ -1173,33 +1173,42 @@ a:active {
   animation: scroll 40s linear infinite;
 }
 
-/* Inhoud */
-.text-scroll {
+/* rails */
+.main-container .text-scroll {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
 }
 
-/* Tekst */
-.text-item {
+/* forceer dat items nooit “shrinken” of rare display krijgen */
+.main-container .text-scroll .text-item,
+.main-container .text-scroll .scroll-icon {
+  flex: 0 0 auto;
+  display: inline-block;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* tekst */
+.main-container .text-scroll .text-item {
   font-size: 2rem;
   font-weight: 800;
-  white-space: nowrap;
+  line-height: 1;
+  /* voorkomt rare baseline overlap */
   padding: 0 18px;
   /* ruimte rond woord */
 }
 
-/* Icoon separator */
-.scroll-icon {
+/* icoon */
+.main-container .text-scroll .scroll-icon {
   width: 32px;
   height: 32px;
   object-fit: contain;
   margin: 0 12px;
-  /* ruimte rond icoon */
   vertical-align: middle;
 }
 
-/* Animatie */
+/* animatie op px-breedte (via JS var --loop-width) */
 @keyframes scroll {
   from {
     transform: translateX(0);
@@ -1209,6 +1218,7 @@ a:active {
     transform: translateX(calc(-1 * var(--loop-width, 0px)));
   }
 }
+
 
 /* Kleiner op mobiel, en minder ruimte rond tekst/icoon */
 @media (max-width: 768px) {
