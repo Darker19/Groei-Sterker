@@ -1172,6 +1172,8 @@ a:active {
 .infinite-scroll {
   display: flex;
   width: max-content;
+  white-space: nowrap;
+  will-change: transform;
   animation: scroll 40s linear infinite;
 }
 
@@ -1180,10 +1182,13 @@ a:active {
   display: inline-flex;
   align-items: center;
   gap: 1.25rem;
-  /* spacing hier */
   white-space: nowrap;
 }
 
+.text-scroll,
+.text-scroll * {
+  box-sizing: border-box;
+}
 
 @keyframes scroll {
   from {
@@ -1204,4 +1209,6 @@ a:active {
   height: 28px;
   width: auto;
   flex: 0 0 auto;
+  display: inline-block;
+  vertical-align: middle;
 }
