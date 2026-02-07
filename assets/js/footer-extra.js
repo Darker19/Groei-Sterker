@@ -129,7 +129,7 @@
         el.appendChild(textItem);
 
         const icon = document.createElement("img");
-        icon.src = "/assets/images/vlinder.png";   // <-- jouw icoon
+        icon.src = "assets/images/Vlinder.png";   // <-- jouw icoon
         icon.alt = "";
         icon.className = "scroll-icon";
         el.appendChild(icon);
