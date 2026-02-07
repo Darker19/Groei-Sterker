@@ -114,29 +114,42 @@
   // Vereist HTML: <div class="text-scroll"></div>
   // ============================
   function initTextScrolls() {
-    const containers = document.querySelectorAll(".text-scroll");
-    if (!containers.length) return;
+    const originals = document.querySelectorAll(".text-scroll:not(.clone)");
+    if (!originals.length) return;
 
-    containers.forEach((el) => {
-      el.innerHTML = "";
+    const iconSrc = new URL("assets/images/Vlinder.png", document.baseURI).href;
 
-      const twice = SCROLL_ITEMS.concat(SCROLL_ITEMS);
+    originals.forEach((orig) => {
+      const clone = orig.parentElement.querySelector(".text-scroll.clone");
 
-      twice.forEach((text) => {
+      orig.innerHTML = "";
+      if (clone) clone.innerHTML = "";
+
+      // bouw 1 set
+      SCROLL_ITEMS.forEach((text, i) => {
+
         const textItem = document.createElement("span");
-        textItem.classList.add("text-item");
+        textItem.className = "text-item";
         textItem.textContent = text;
-        el.appendChild(textItem);
+        orig.appendChild(textItem);
 
-        const icon = document.createElement("img");
-        icon.src = "assets/images/Vlinder.png";   // <-- jouw icoon
-        icon.alt = "";
-        icon.className = "scroll-icon";
-        el.appendChild(icon);
-
+        // icoon alleen TUSSEN items
+        if (i < SCROLL_ITEMS.length - 1) {
+          const icon = document.createElement("img");
+          icon.src = iconSrc;
+          icon.alt = "";
+          icon.className = "scroll-icon";
+          orig.appendChild(icon);
+        }
       });
+
+      // clone exact dezelfde inhoud
+      if (clone) {
+        clone.innerHTML = orig.innerHTML;
+      }
     });
   }
+
 
 
   // ============================
