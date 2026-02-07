@@ -128,10 +128,12 @@
         textItem.textContent = text;
         el.appendChild(textItem);
 
-        const star = document.createElement("span");
-        star.classList.add("star");
-        star.textContent = "★";
-        el.appendChild(star);
+        const icon = document.createElement("img");
+        icon.src = "/assets/images/vlinder.png";   // <-- jouw icoon
+        icon.alt = "";
+        icon.className = "scroll-icon";
+        el.appendChild(icon);
+
       });
     });
   }

@@ -1200,7 +1200,9 @@ a:active {
   font-weight: 800;
 }
 
-.star {
-  font-size: 2rem;
+.scroll-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
   margin: 10px 30px;
 }
