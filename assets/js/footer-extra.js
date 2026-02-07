@@ -10,12 +10,24 @@
   const iconUrl = new URL("assets/images/Vlinder_flap_recolored.gif", document.baseURI).href;
 
   const SCROLL_ITEMS = [
-    "Digital Strategy",
-    "Design System",
-    "Brand Strategy",
-    "Website Design",
-    "SEO Optimization",
-    "Content Strategy"
+    "VGZ",
+    "VGZ Bewust",
+    "UMC",
+    "IZZ",
+    "Univé",
+    "IZA",
+    "Zekur",
+    "United Consumers",
+    "Achmea",
+    "Zilveren Kruis",
+    "Interpolis",
+    "De Christelijke",
+    "FBTO",
+    "De Friesland",
+    "Zilveren Kruis ZieZo",
+    "Zorg en Zekerheid",
+    "AZVZ",
+    "ZEM"
   ];
 
   // ============================
