@@ -1174,7 +1174,7 @@ a:active {
   width: max-content;
   /* belangrijk */
   will-change: transform;
-  animation: scroll 25s linear infinite;
+  animation: scroll 30s linear infinite;
 }
 
 /* GEEN animatie hier */
