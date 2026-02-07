@@ -1207,7 +1207,7 @@ a:active {
   }
 }
 
-
+/* Basis styling voor tekstitems */
 .text-item {
   font-size: 2rem;
   font-weight: 800;
@@ -1219,4 +1219,36 @@ a:active {
   flex: 0 0 auto;
   display: inline-block;
   vertical-align: middle;
+}
+
+/* voorkom dat tekst/icoon in elkaar schuift */
+.text-scroll {
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  gap: 0 !important;
+  /* we sturen spacing via separator */
+}
+
+.text-item {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  padding: 0 18px !important;
+  /* ruimte rondom elk woord */
+  flex: 0 0 auto !important;
+}
+
+.scroll-icon {
+  display: inline-block !important;
+  width: 32px !important;
+  /* vaste ruimte */
+  height: 32px !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  /* extra lucht om icoon */
+  flex: 0 0 auto !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  top: 0 !important;
 }

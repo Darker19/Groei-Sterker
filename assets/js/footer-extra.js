@@ -142,14 +142,12 @@
         textItem.textContent = text;
         orig.appendChild(textItem);
 
-        if (i < SCROLL_ITEMS.length - 1) {
-          const icon = document.createElement("img");
-          icon.src = iconSrc;
-          icon.alt = "";
-          icon.className = "scroll-icon";
-          icon.loading = "lazy";
-          orig.appendChild(icon);
-        }
+        const icon = document.createElement("img");
+        icon.src = iconSrc;
+        icon.alt = "";
+        icon.className = "scroll-icon";
+        icon.loading = "lazy";
+        orig.appendChild(icon);
       });
 
       // clone exact dezelfde inhoud
