@@ -1153,7 +1153,7 @@ a:active {
   padding: 0;
   overflow-x: hidden;
   display: flex;
-  min-height: 100vh;
+  min-height: 10px;
   color: #100c0d;
   background-color: #adea74;
 }
