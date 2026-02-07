@@ -114,27 +114,28 @@
   // Vereist HTML: <div class="text-scroll"></div>
   // ============================
   function initTextScrolls() {
-    const horizontalTextScroll = document.querySelectorAll(".text-scroll");
-    if (!horizontalTextScroll.length) return;
+    const containers = document.querySelectorAll(".text-scroll");
+    if (!containers.length) return;
 
-    // reset
-    horizontalTextScroll.forEach((el) => (el.innerHTML = ""));
+    containers.forEach((el) => {
+      el.innerHTML = "";
 
-    // build
-    SCROLL_ITEMS.forEach((text) => {
-      horizontalTextScroll.forEach((scrollItem) => {
+      const twice = SCROLL_ITEMS.concat(SCROLL_ITEMS);
+
+      twice.forEach((text) => {
         const textItem = document.createElement("span");
         textItem.classList.add("text-item");
         textItem.textContent = text;
-        scrollItem.appendChild(textItem);
+        el.appendChild(textItem);
 
         const star = document.createElement("span");
         star.classList.add("star");
         star.textContent = "★";
-        scrollItem.appendChild(star);
+        el.appendChild(star);
       });
     });
   }
+
 
   // ============================
   // Run on footer:loaded + fallback

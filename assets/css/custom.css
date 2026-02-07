@@ -1146,7 +1146,6 @@ a:active {
 /* scrilling text */
 
 .main-container {
-  display: flex;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -1169,23 +1168,29 @@ a:active {
   background-color: #ffd0b6;
 }
 
+/* DIT is de rail die beweegt */
 .infinite-scroll {
   display: flex;
+  width: max-content;
+  /* belangrijk */
+  will-change: transform;
   animation: scroll 25s linear infinite;
 }
 
+/* GEEN animatie hier */
 .text-scroll {
   display: inline-flex;
   align-items: center;
-  flex-shrink: 0;
+  gap: 1.25rem;
+  white-space: nowrap;
 }
 
 @keyframes scroll {
-  0% {
+  from {
     transform: translateX(0);
   }
 
-  100% {
+  to {
     transform: translateX(-50%);
   }
 }
