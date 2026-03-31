@@ -1142,3 +1142,92 @@ a:active {
     display: none !important;
   }
 }
+
+/* ============================
+   Scrolling text ticker (robust)
+============================ */
+
+.main-container {
+  width: 100%;
+  overflow-x: hidden;
+  color: #100c0d;
+}
+
+.main-container .scroll-container {
+  overflow: hidden;
+}
+
+.main-container .text-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  background-color: #ffd0b6;
+  white-space: nowrap;
+}
+
+.main-container .infinite-scroll {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
+  animation: scroll 40s linear infinite;
+}
+
+/* rails */
+.main-container .text-scroll {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* forceer dat items nooit “shrinken” of rare display krijgen */
+.main-container .text-scroll .text-item,
+.main-container .text-scroll .scroll-icon {
+  flex: 0 0 auto;
+  display: inline-block;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* tekst */
+.main-container .text-scroll .text-item {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  /* voorkomt rare baseline overlap */
+  padding: 0 18px;
+  /* ruimte rond woord */
+}
+
+/* icoon */
+.main-container .text-scroll .scroll-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin: 0 12px;
+  vertical-align: middle;
+}
+
+/* animatie op px-breedte (via JS var --loop-width) */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-1 * var(--loop-width, 0px)));
+  }
+}
+
+
+/* Kleiner op mobiel, en minder ruimte rond tekst/icoon */
+@media (max-width: 768px) {
+  .text-item {
+    font-size: 1.4rem;
+  }
+
+  .scroll-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
