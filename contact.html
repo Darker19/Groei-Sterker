@@ -234,9 +234,7 @@
                 </div>
                 <div class="col-lg-6 my-auto pb-4 mbr-form" data-form-type="formoid">
                     <!--Formbuilder Form-->
-                    <form action="https://mobirise.eu/" class="mbr-form form-with-styler" data-form-title="Form Name"
-                        method="POST"><input data-form-email="true" name="email" type="hidden"
-                            value="cbr7dkeW3WNz1p51UAPkjonGjVRdytkvod8Hoi38RpDdHgap1a8A1c4btAoqJHpnx5HJRiTyp366mZ9CergPqZsRAdKpK0jSTCYRxHw7S7mSuW0K5qCYtig2OrDOqRLs.bG2ADGb0TNhkhSr/6RRvJ06nhtBxspFr2j9F8MWc9QXV5lwvxdlqDfrRQ2GDIM7/Lo0WwwCUq4M+e9mNWocDj6kFUyfiOJics2Una4dyy53+0FbJaVC+/KEHPvZY8cb8" />
+                    <form action="/contact-verzenden.php" method="POST">
                         <div class="row">
                             <div class="alert alert-success col-12" data-form-alert="" hidden="hidden">Bedankt voor het
                                 invullen van het formulier, ik neem zo snel mogelijk contact met je op.</div>
@@ -250,16 +248,16 @@
                             <div class="col-lg-12">
                             </div>
                             <div class="col-lg-12 form-group mb-3" data-for="Naam">
-                                <input class="form-control display-7" data-form-field="Naam" id="Naam-forms1-47"
-                                    name="Naam" placeholder="Naam *" required="required" type="text" value="" />
+                                <input type="text" name="naam" placeholder="Naam" required>
                             </div>
                             <div class="col-lg-12 form-group mb-3" data-for="E-mail">
-                                <input class="form-control display-7" data-form-field="E-mail" id="E-mail-forms1-47"
-                                    name="E-mail" placeholder="E-mail *" required="required" type="tel" value="" />
+                                <input type="email" name="email" placeholder="E-mailadres" required>
+                            </div>
+                            <div class="col-lg-12 form-group mb-3" data-for="E-mail">
+                                <input type="tel" name="telefoon" placeholder="Telefoonnummer">
                             </div>
                             <div class="col-lg-12 form-group mb-3" data-for="Bericht">
-                                <textarea class="form-control display-7" data-form-field="Bericht"
-                                    id="Bericht-forms1-47" name="Bericht" placeholder="Typ hier je bericht"></textarea>
+                                <textarea name="bericht" placeholder="Typ hier je bericht..." required></textarea>
                             </div>
                             <div class="col-lg-12 button-svg mbr-section-btn">
                                 <button class="w-100 btn btn-primary text-truncate display-7"
