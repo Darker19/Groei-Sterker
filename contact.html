@@ -45,55 +45,6 @@
 
         gtag('config', 'G-B11PEFEY7T');
     </script>
-    <script>
-        const form = document.getElementById("contactForm");
-        const button = document.getElementById("contactSubmitButton");
-
-        form.addEventListener("submit", async function (e) {
-
-            e.preventDefault();
-
-            // voorkomt dubbel klikken
-            if (button.disabled) return;
-
-            button.disabled = true;
-            button.innerText = "Versturen...";
-
-            const formData = new FormData(form);
-
-            try {
-
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    body: formData
-                });
-
-                if (response.ok) {
-
-                    button.innerText = "Gelukt! 💛";
-                    button.style.background = "#2CB7B0";
-                    button.style.borderColor = "#2CB7B0";
-                    button.style.cursor = "default";
-
-                    // formulier optioneel resetten
-                    form.reset();
-
-                } else {
-
-                    button.disabled = false;
-                    button.innerText = "Opnieuw proberen";
-
-                }
-
-            } catch (error) {
-
-                button.disabled = false;
-                button.innerText = "Fout opgetreden";
-
-            }
-
-        });
-    </script>
 </head>
 
 <body class="custom-theme">
@@ -338,6 +289,55 @@
     <script src="assets/theme/js/script.js" defer></script>
     <script src="assets/js/main.js" defer></script>
     <script src="assets/js/footer-extra.js" defer></script>
+    <script>
+        const form = document.getElementById("contactForm");
+        const button = document.getElementById("contactSubmitButton");
+
+        form.addEventListener("submit", async function (e) {
+
+            e.preventDefault();
+
+            // voorkomt dubbel klikken
+            if (button.disabled) return;
+
+            button.disabled = true;
+            button.innerText = "Versturen...";
+
+            const formData = new FormData(form);
+
+            try {
+
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+
+                    button.innerText = "Gelukt! 💛";
+                    button.style.background = "#2CB7B0";
+                    button.style.borderColor = "#2CB7B0";
+                    button.style.cursor = "default";
+
+                    // formulier optioneel resetten
+                    form.reset();
+
+                } else {
+
+                    button.disabled = false;
+                    button.innerText = "Opnieuw proberen";
+
+                }
+
+            } catch (error) {
+
+                button.disabled = false;
+                button.innerText = "Fout opgetreden";
+
+            }
+
+        });
+    </script>
 </body>
 
 </html>
