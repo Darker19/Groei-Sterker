@@ -33,5 +33,6 @@ $headers .= "Reply-To: $email\r\n";
 
 mail($to, $subject, $message, $headers);
 
-header("Location: bedankt.html");
+http_response_code(200);
+echo "OK";
 exit;

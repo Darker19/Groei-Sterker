@@ -1,13 +1,111 @@
-<section class="thank-you">
+<!DOCTYPE html>
+<html lang="nl">
 
-    <h1>Bedankt voor jullie bericht </h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedankt | Groei Sterker</title>
 
-    <p>
-        We hebben jullie aanvraag goed ontvangen en nemen zo snel mogelijk contact op.
-    </p>
+    <style>
+        :root {
+            --gs-bg: #fffaf0;
+            --gs-primary: #ffb08a;
+            --gs-primary-light: #ffd7c3;
+            --gs-text: #151515;
+            --gs-accent: #2CB7B0;
+        }
 
-    <a href="/">
-        Terug naar homepage
-    </a>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--gs-bg);
+            color: var(--gs-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
 
-</section>
+        .thank-you-card {
+            max-width: 720px;
+            width: 100%;
+            text-align: center;
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 48px 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+            border: 4px solid var(--gs-primary-light);
+        }
+
+        .thank-you-card img {
+            width: 130px;
+            max-width: 40%;
+            margin-bottom: 20px;
+        }
+
+        .thank-you-card h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin: 0 0 18px;
+            color: var(--gs-text);
+        }
+
+        .thank-you-card p {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            margin: 0 auto 28px;
+            max-width: 560px;
+        }
+
+        .thank-you-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-gs {
+            display: inline-block;
+            padding: 14px 26px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            background: var(--gs-primary);
+            color: #111;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-gs:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(255, 176, 138, 0.45);
+        }
+
+        .btn-gs.secondary {
+            background: var(--gs-accent);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="thank-you-card">
+        <!-- Pas dit pad aan naar jouw olifant/logo -->
+        <img src="assets/images/olifant.png" alt="Groei Sterker olifant">
+
+        <h1>Bedankt voor jullie bericht 💛</h1>
+
+        <p>
+            We hebben jullie bericht goed ontvangen.
+            We nemen zo snel mogelijk contact met jullie op.
+        </p>
+
+        <div class="thank-you-actions">
+            <a class="btn-gs" href="/">Terug naar home</a>
+            <a class="btn-gs secondary" href="/contact.html">Nog een bericht sturen</a>
+        </div>
+    </main>
+
+</body>
+
+</html>
