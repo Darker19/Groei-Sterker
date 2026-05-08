@@ -235,36 +235,46 @@
                 <div class="col-lg-6 my-auto pb-4 mbr-form" data-form-type="formoid">
                     <!--Formbuilder Form-->
                     <form action="/contact-verzenden.php" method="POST">
-
-                        <div class="col-lg-12 form-group mb-3" data-for="Naam">
-                            <input class="form-control display-7" data-form-field="Naam" id="Naam-forms1-47" name="naam"
-                                placeholder="Naam *" required type="text" />
+                        <div class="row">
+                            <div class="alert alert-success col-12" data-form-alert="" hidden="hidden">Bedankt voor het
+                                invullen van het formulier, ik neem zo snel mogelijk contact met je op.</div>
+                            <div class="alert alert-danger col-12" data-form-alert-danger="" hidden="hidden">Oops...!
+                                some problem!</div>
                         </div>
+                        <div class="dragArea row">
+                            <div class="col-lg-12">
+                                <h5 class="mbr-fonts-style mbr-section-title display-2 pink"> Contactformulier</h5>
+                            </div>
+                            <div class="col-lg-12 form-group mb-3" data-for="Naam">
+                                <input class="form-control display-7" data-form-field="Naam" id="Naam-forms1-47"
+                                    name="naam" placeholder="Naam *" required type="text" />
+                            </div>
 
-                        <div class="col-lg-12 form-group mb-3" data-for="Email">
-                            <input class="form-control display-7" data-form-field="Email" id="Email-forms1-47"
-                                name="email" placeholder="E-mailadres *" required type="email" />
+                            <div class="col-lg-12 form-group mb-3" data-for="Email">
+                                <input class="form-control display-7" data-form-field="Email" id="Email-forms1-47"
+                                    name="email" placeholder="E-mailadres *" required type="email" />
+                            </div>
+
+                            <div class="col-lg-12 form-group mb-3" data-for="Telefoon">
+                                <input class="form-control display-7" data-form-field="Telefoon" id="Telefoon-forms1-47"
+                                    name="telefoon" placeholder="Telefoonnummer" type="tel" />
+                            </div>
+
+                            <div class="col-lg-12 form-group mb-3" data-for="Bericht">
+                                <textarea class="form-control display-7" data-form-field="Bericht"
+                                    id="Bericht-forms1-47" name="bericht" placeholder="Bericht *" required
+                                    rows="6"></textarea>
+                            </div>
+
+                            <!-- Honeypot -->
+                            <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary display-7">
+                                    Verstuur bericht
+                                </button>
+                            </div>
                         </div>
-
-                        <div class="col-lg-12 form-group mb-3" data-for="Telefoon">
-                            <input class="form-control display-7" data-form-field="Telefoon" id="Telefoon-forms1-47"
-                                name="telefoon" placeholder="Telefoonnummer" type="tel" />
-                        </div>
-
-                        <div class="col-lg-12 form-group mb-3" data-for="Bericht">
-                            <textarea class="form-control display-7" data-form-field="Bericht" id="Bericht-forms1-47"
-                                name="bericht" placeholder="Bericht *" required rows="6"></textarea>
-                        </div>
-
-                        <!-- Honeypot -->
-                        <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
-
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary display-7">
-                                Verstuur bericht
-                            </button>
-                        </div>
-
                     </form><!--Formbuilder Form-->
                 </div>
             </div>

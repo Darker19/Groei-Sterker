@@ -8,14 +8,14 @@ if (!empty($_POST["website"])) {
     exit;
 }
 
-$naam = htmlspecialchars($_POST["naam"]);
-$email = htmlspecialchars($_POST["email"]);
-$telefoon = htmlspecialchars($_POST["telefoon"]);
-$bericht = htmlspecialchars($_POST["bericht"]);
+$naam = htmlspecialchars($_POST["naam"] ?? '');
+$email = htmlspecialchars($_POST["email"] ?? '');
+$telefoon = htmlspecialchars($_POST["telefoon"] ?? '');
+$bericht = htmlspecialchars($_POST["bericht"] ?? '');
 
 $to = "info@groei-sterker.nl";
 
-$subject = "Nieuw bericht via contactformulier";
+$subject = "Nieuw bericht via Groei Sterker";
 
 $message = "
 Naam: $naam
@@ -35,4 +35,3 @@ mail($to, $subject, $message, $headers);
 
 header("Location: bedankt.html");
 exit;
-?>
