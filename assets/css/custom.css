@@ -1231,3 +1231,120 @@ a:active {
     height: 22px;
   }
 }
+
+/* Technishe issue start */
+.technical-error-card {
+  max-width: 1100px;
+  margin: 70px auto 0;
+  padding: 55px 60px;
+
+  display: flex;
+  align-items: center;
+  gap: 55px;
+
+  background: #ffd0b6;
+  border: 2px solid #f9b18a;
+  border-radius: 34px;
+  box-shadow: 0 12px 35px rgba(44, 183, 176, 0.12);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.technical-error-card::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  bottom: -95px;
+  width: 420px;
+  height: 180px;
+  background: #fde8dc;
+  border-radius: 60% 40% 0 0;
+  opacity: 0.75;
+}
+
+.technical-error-icon {
+  flex: 0 0 250px;
+  height: 250px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 92px;
+  border-radius: 50%;
+  background: #e9f7f3;
+  color: #2CB7B0;
+}
+
+.technical-error-content {
+  position: relative;
+  z-index: 2;
+}
+
+.technical-error-content h3 {
+  margin: 0 0 22px;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.1;
+  color: #2CB7B0;
+}
+
+.technical-error-content p {
+  max-width: 650px;
+  margin: 0 0 34px;
+  font-size: 1.35rem;
+  line-height: 1.7;
+  color: #333;
+}
+
+.technical-error-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 18px 34px;
+  border-radius: 18px;
+
+  background: linear-gradient(135deg, #2CB7B0, #229c96);
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 700;
+
+  box-shadow: 0 10px 25px rgba(44, 183, 176, 0.22);
+  transition: 0.2s ease;
+}
+
+.technical-error-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(44, 183, 176, 0.28);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .technical-error-card {
+    margin-top: 45px;
+    padding: 35px 24px;
+    flex-direction: column;
+    text-align: center;
+    gap: 28px;
+  }
+
+  .technical-error-icon {
+    flex-basis: auto;
+    width: 160px;
+    height: 160px;
+    font-size: 62px;
+  }
+
+  .technical-error-content p {
+    font-size: 1.05rem;
+  }
+
+  .technical-error-button {
+    font-size: 1rem;
+    padding: 15px 22px;
+  }
+}
+
+/* Technishe issue eind */
