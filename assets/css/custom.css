@@ -1233,6 +1233,12 @@ a:active {
 }
 
 /* Technishe issue start */
+.technical-section {
+  overflow: visible !important;
+  padding: 70px 0 120px !important;
+  background: #ffdecc;
+}
+
 .technical-error-card {
   max-width: 1100px;
   margin: 70px auto 0;
