@@ -6,6 +6,8 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 
 if (!empty($_POST["company_website"])) {
+    http_response_code(403);
+    echo "HONEYPOT GEBLOKKEERD";
     exit;
 }
 
