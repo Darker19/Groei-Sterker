@@ -267,7 +267,17 @@
                             </div>
 
                             <!-- Honeypot -->
-                            <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+                            <div class="hp-field" aria-hidden="true">
+    <label for="company_website">Website</label>
+    <input
+        type="text"
+        id="company_website"
+        name="company_website"
+        tabindex="-1"
+        autocomplete="off">
+</div>
+
+<input type="hidden" name="form_start" id="form_start">
 
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary display-7" id="contactSubmitButton">
@@ -363,6 +373,10 @@
 
         });
     </script>
+    <script>
+document.getElementById('form_start').value =
+    Math.floor(Date.now() / 1000);
+</script>
 </body>
 
 </html>

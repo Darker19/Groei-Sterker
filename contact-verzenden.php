@@ -4,7 +4,14 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-if (!empty($_POST["website"])) {
+
+if (!empty($_POST["company_website"])) {
+    exit;
+}
+
+$formStart = (int)($_POST["form_start"] ?? 0);
+
+if ($formStart === 0 || time() - $formStart < 4) {
     exit;
 }
 
@@ -36,3 +43,4 @@ mail($to, $subject, $message, $headers);
 http_response_code(200);
 echo "OK";
 exit;
+
