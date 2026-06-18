@@ -1232,8 +1232,6 @@ a:active {
   }
 }
 
-<<<<<<< HEAD
-=======
 .hp-field {
     position: absolute;
     left: -9999px;
@@ -1243,7 +1241,6 @@ a:active {
     overflow: hidden;
 }
 
->>>>>>> 82a50e8d06899b04cc6ce29b8c75cddbf5bda728
 /* Technishe issue start */
 .technical-section {
   overflow: visible !important;
