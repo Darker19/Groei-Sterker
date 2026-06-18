@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /INSTALL.txt
+Disallow: /publish-hashes.json
+Allow: /
+
+Sitemap: https://www.groei-sterker.nl/sitemap.xml
