@@ -2,21 +2,30 @@ name: Website monitor (via UptimeRobot)
 
 on:
   schedule:
-    # Elke 5 minuten, behalve in het uur 08 (dan doet de heartbeat-cron het)
+    # Iedere 5 minuten, behalve tijdens het uur 08:00
     - cron: "*/5 0-7,9-23 * * *"
-    - cron: "0 8 * * *"   # elke dag 08:00 heartbeat
+      timezone: "Europe/Amsterdam"
+
+    # Dagelijkse heartbeat om 08:00 Nederlandse tijd
+    - cron: "0 8 * * *"
+      timezone: "Europe/Amsterdam"
+
   workflow_dispatch: {}
 
 concurrency:
   group: website-monitor
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 4
+
     steps:
-      - name: Restore last status (cache)
-        uses: actions/cache@v4
+      # Alleen de laatst opgeslagen status herstellen.
+      # Er wordt pas een nieuwe cache opgeslagen bij een echte statuswijziging.
+      - name: Restore last status
+        uses: actions/cache/restore@v4
         with:
           path: .status
           key: website-status-${{ github.run_id }}
@@ -24,147 +33,372 @@ jobs:
             website-status-
 
       - name: Read last status
+        shell: bash
         run: |
           mkdir -p .status
+
           if [ -f .status/last.txt ]; then
-            echo "LAST=$(cat .status/last.txt)" >> $GITHUB_ENV
+            LAST_STATUS="$(cat .status/last.txt)"
+
+            if [ "$LAST_STATUS" != "UP" ] && [ "$LAST_STATUS" != "DOWN" ]; then
+              LAST_STATUS="UNKNOWN"
+            fi
           else
-            echo "UNKNOWN" > .status/last.txt
-            echo "LAST=UNKNOWN" >> $GITHUB_ENV
+            LAST_STATUS="UNKNOWN"
           fi
 
-      - name: Fetch status from UptimeRobot API (robust)
+          echo "LAST=$LAST_STATUS" >> "$GITHUB_ENV"
+          echo "Vorige status: $LAST_STATUS"
+
+      - name: Fetch status from UptimeRobot API
         env:
           UPTIMEROBOT_API_KEY: ${{ secrets.UPTIMEROBOT_API_KEY }}
+
+          # Optioneel:
+          # Maak deze secret aan als je meerdere monitors hebt.
+          # Zonder deze secret wordt de eerste monitor gebruikt.
+          UPTIMEROBOT_MONITOR_ID: ${{ secrets.UPTIMEROBOT_MONITOR_ID }}
+
         run: |
           python3 - <<'PY'
-          import os, json, time, socket, urllib.request, urllib.parse
-          from urllib.error import URLError, HTTPError
+          import json
+          import os
+          import socket
+          import time
+          import urllib.parse
+          import urllib.request
 
-          api_key = os.environ.get("UPTIMEROBOT_API_KEY")
+          from urllib.error import HTTPError, URLError
+
+
+          api_key = os.environ.get("UPTIMEROBOT_API_KEY", "").strip()
+          monitor_id = os.environ.get("UPTIMEROBOT_MONITOR_ID", "").strip()
+
           if not api_key:
-            raise SystemExit("Missing secret: UPTIMEROBOT_API_KEY")
+              raise SystemExit("Missing secret: UPTIMEROBOT_API_KEY")
 
-          url = "https://api.uptimerobot.com/v2/getMonitors"
-          data = urllib.parse.urlencode({
-            "api_key": api_key,
-            "format": "json",
-            "logs": "0"
-          }).encode("utf-8")
 
-          req = urllib.request.Request(
-            url,
-            data=data,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-            method="POST"
+          api_url = "https://api.uptimerobot.com/v2/getMonitors"
+
+          parameters = {
+              "api_key": api_key,
+              "format": "json",
+              "logs": "0",
+          }
+
+          # Als een monitor-ID is ingesteld, alleen die monitor ophalen.
+          if monitor_id:
+              parameters["monitors"] = monitor_id
+
+          request_data = urllib.parse.urlencode(parameters).encode("utf-8")
+
+          request = urllib.request.Request(
+              api_url,
+              data=request_data,
+              headers={
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  "User-Agent": "GitHub-Actions-Website-Monitor",
+              },
+              method="POST",
           )
 
+
           payload = None
-          last_err = None
+          last_error = None
 
-          attempts = 5
-          timeout_s = 45
+          attempts = 3
+          timeout_seconds = 25
 
-          for i in range(attempts):
-            try:
-              with urllib.request.urlopen(req, timeout=timeout_s) as r:
-                body = r.read().decode("utf-8")
-              payload = json.loads(body)
-              last_err = None
-              break
-            except (TimeoutError, socket.timeout) as e:
-              last_err = f"TIMEOUT({e})"
-            except HTTPError as e:
-              # bijv. 429 rate limit, 5xx, etc.
-              last_err = f"HTTP_{e.code}"
-            except URLError as e:
-              last_err = f"URLERR({e.reason})"
-            except Exception as e:
-              last_err = f"ERR({type(e).__name__})"
+          for attempt in range(attempts):
+              try:
+                  with urllib.request.urlopen(
+                      request,
+                      timeout=timeout_seconds
+                  ) as response:
+                      response_body = response.read().decode("utf-8")
 
-            # exponential backoff (max 20s)
-            sleep_s = min(2 * (2 ** i), 20)
-            time.sleep(sleep_s)
+                  payload = json.loads(response_body)
+                  last_error = None
+                  break
 
-          # defaults als API faalt
-          now = "UNKNOWN"
-          status_code = "NA"
-          murl = "(unknown)"
-          msg = "API_ERROR" if last_err else "UNKNOWN"
+              except (TimeoutError, socket.timeout) as error:
+                  last_error = f"TIMEOUT({error})"
 
-          monitors = (payload or {}).get("monitors", [])
-          if monitors:
-            m = monitors[0]
-            status = int(m.get("status", -1))
-            murl = m.get("url") or m.get("friendly_name") or "(unknown)"
+              except HTTPError as error:
+                  last_error = f"HTTP_{error.code}"
 
-            # UptimeRobot status codes: 2=up, 8=seems down, 9=down, 0=paused, 1=not checked yet
-            if status == 2:
-              now = "UP"
-              msg = "UP"
-            elif status in (8, 9):
-              now = "DOWN"
-              msg = "DOWN"
-            else:
-              now = "UNKNOWN"
-              msg = f"STATUS_{status}"
+              except URLError as error:
+                  last_error = f"URL_ERROR({error.reason})"
 
-            status_code = str(status)
-          else:
-            # onderscheid maken tussen "geen monitor" en "API error"
-            if last_err:
-              msg = f"API_{last_err}"
-            else:
-              msg = "No monitor returned from API"
+              except json.JSONDecodeError:
+                  last_error = "INVALID_JSON"
 
-          env_path = os.environ["GITHUB_ENV"]
-          with open(env_path, "a", encoding="utf-8") as f:
-            f.write(f"NOW={now}\n")
-            f.write(f"UPT_STATUS={status_code}\n")
-            f.write(f"URL={murl}\n")
-            f.write(f"MSG={msg}\n")
+              except Exception as error:
+                  last_error = f"ERROR({type(error).__name__})"
+
+              # Niet meer wachten na de laatste poging.
+              if attempt < attempts - 1:
+                  sleep_seconds = min(2 * (2 ** attempt), 10)
+                  time.sleep(sleep_seconds)
+
+
+          # Standaardwaarden bij een mislukte controle.
+          current_status = "UNKNOWN"
+          uptimerobot_status = "NA"
+          monitor_url = "(onbekend)"
+          message = f"API_{last_error}" if last_error else "UNKNOWN"
+
+
+          # Controleren of UptimeRobot zelf een geldige response gaf.
+          if payload and payload.get("stat") == "ok":
+              monitors = payload.get("monitors", [])
+
+              if monitors:
+                  monitor = monitors[0]
+
+                  try:
+                      status_code = int(monitor.get("status", -1))
+                  except (TypeError, ValueError):
+                      status_code = -1
+
+                  monitor_url = (
+                      monitor.get("url")
+                      or monitor.get("friendly_name")
+                      or "(onbekend)"
+                  )
+
+                  # UptimeRobot:
+                  # 0 = paused
+                  # 1 = not checked yet
+                  # 2 = up
+                  # 8 = seems down
+                  # 9 = down
+                  if status_code == 2:
+                      current_status = "UP"
+                      message = "UP"
+
+                  elif status_code in (8, 9):
+                      current_status = "DOWN"
+                      message = "DOWN"
+
+                  else:
+                      current_status = "UNKNOWN"
+                      message = f"STATUS_{status_code}"
+
+                  uptimerobot_status = str(status_code)
+
+              else:
+                  message = "NO_MONITOR_RETURNED"
+
+          elif payload:
+              api_error = payload.get("error", {})
+              error_type = api_error.get("type", "UNKNOWN_API_ERROR")
+              message = f"API_{error_type}"
+
+
+          # Meerregelige of onverwachte waarden voorkomen.
+          monitor_url = str(monitor_url).replace("\r", " ").replace("\n", " ")
+          message = str(message).replace("\r", " ").replace("\n", " ")
+
+          github_env = os.environ["GITHUB_ENV"]
+
+          with open(github_env, "a", encoding="utf-8") as env_file:
+              env_file.write(f"NOW={current_status}\n")
+              env_file.write(f"UPT_STATUS={uptimerobot_status}\n")
+              env_file.write(f"URL={monitor_url}\n")
+              env_file.write(f"MSG={message}\n")
+
+          print(f"Huidige status: {current_status}")
+          print(f"UptimeRobot-code: {uptimerobot_status}")
+          print(f"Monitor: {monitor_url}")
+          print(f"Bericht: {message}")
           PY
 
-      - name: Notify Discord if state changed
-        if: env.LAST != env.NOW
-        continue-on-error: true
+      # Bepalen of Discord geïnformeerd moet worden.
+      - name: Determine status transition
+        shell: bash
         run: |
-          if [ "${{ env.NOW }}" = "DOWN" ]; then
-            TITLE="🌐 Website status — OFFLINE"
-            COLOR=15158332
-          elif [ "${{ env.NOW }}" = "UP" ]; then
-            TITLE="🌐 Website status — HERSTELD"
-            COLOR=3066993
-          else
-            TITLE="🌐 Website status — UNKNOWN"
-            COLOR=16776960
+          NOTIFY=false
+          SAVE_STATUS=false
+
+          # Alleen UP en DOWN worden opgeslagen.
+          # UNKNOWN is een meetfout en geen websitestatus.
+          if [ "${{ env.NOW }}" != "UNKNOWN" ] && \
+             [ "${{ env.NOW }}" != "${{ env.LAST }}" ]; then
+            SAVE_STATUS=true
           fi
 
-          curl -H "Content-Type: application/json" -X POST \
-            -d "{
-              \"embeds\": [{
-                \"title\": \"$TITLE\",
-                \"description\": \"${{ env.URL }}\\nUptimeRobot status: ${{ env.UPT_STATUS }} (${{ env.MSG }})\\nLAST: ${{ env.LAST }} → NOW: ${{ env.NOW }}\",
-                \"color\": $COLOR
-              }]
-            }" \
-            "${{ secrets.DISCORD_WEBHOOK_DEPLOY }}"
+          # Offline melden.
+          # Dit gebeurt ook wanneer er nog geen vorige status beschikbaar is.
+          if [ "${{ env.NOW }}" = "DOWN" ] && \
+             [ "${{ env.LAST }}" != "DOWN" ]; then
+            NOTIFY=true
+          fi
 
-      - name: Daily heartbeat (still up)
-        if: github.event.schedule == '0 8 * * *' && env.NOW == 'UP'
+          # Alleen hersteld melden als de website daarvoor echt DOWN was.
+          if [ "${{ env.NOW }}" = "UP" ] && \
+             [ "${{ env.LAST }}" = "DOWN" ]; then
+            NOTIFY=true
+          fi
+
+          echo "NOTIFY=$NOTIFY" >> "$GITHUB_ENV"
+          echo "SAVE_STATUS=$SAVE_STATUS" >> "$GITHUB_ENV"
+
+          echo "Discord-melding nodig: $NOTIFY"
+          echo "Nieuwe status opslaan: $SAVE_STATUS"
+
+      - name: Notify Discord if state changed
+        if: env.NOTIFY == 'true'
         continue-on-error: true
-        run: |
-          curl -H "Content-Type: application/json" -X POST \
-            -d "{
-              \"embeds\": [{
-                \"title\": \"🌐 Website status — OK\",
-                \"description\": \"Website is nog steeds online ✅\\n${{ env.URL }}\\nUptimeRobot status: ${{ env.UPT_STATUS }}\",
-                \"color\": 3066993
-              }]
-            }" \
-            "${{ secrets.DISCORD_WEBHOOK_DEPLOY }}"
 
-      - name: Persist status
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEPLOY }}
+          CURRENT_STATUS: ${{ env.NOW }}
+          LAST_STATUS: ${{ env.LAST }}
+          MONITOR_URL: ${{ env.URL }}
+          UPTIMEROBOT_STATUS: ${{ env.UPT_STATUS }}
+          STATUS_MESSAGE: ${{ env.MSG }}
+
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+
+          webhook = os.environ.get("DISCORD_WEBHOOK", "").strip()
+
+          if not webhook:
+              raise SystemExit(
+                  "Missing secret: DISCORD_WEBHOOK_DEPLOY"
+              )
+
+
+          current_status = os.environ["CURRENT_STATUS"]
+          last_status = os.environ["LAST_STATUS"]
+          monitor_url = os.environ["MONITOR_URL"]
+          uptimerobot_status = os.environ["UPTIMEROBOT_STATUS"]
+          status_message = os.environ["STATUS_MESSAGE"]
+
+
+          if current_status == "DOWN":
+              title = "🌐 Website status — OFFLINE"
+              color = 15158332
+          else:
+              title = "🌐 Website status — HERSTELD"
+              color = 3066993
+
+
+          payload = {
+              "embeds": [
+                  {
+                      "title": title,
+                      "description": (
+                          f"{monitor_url}\n"
+                          f"UptimeRobot status: "
+                          f"{uptimerobot_status} ({status_message})\n"
+                          f"LAST: {last_status} → "
+                          f"NOW: {current_status}"
+                      ),
+                      "color": color,
+                  }
+              ]
+          }
+
+
+          request = urllib.request.Request(
+              webhook,
+              data=json.dumps(payload).encode("utf-8"),
+              headers={
+                  "Content-Type": "application/json",
+                  "User-Agent": "GitHub-Actions-Website-Monitor",
+              },
+              method="POST",
+          )
+
+          with urllib.request.urlopen(request, timeout=20):
+              pass
+
+          print(f"Discord-melding verzonden: {title}")
+          PY
+
+      # De heartbeat wordt iedere dag om 08:00 verstuurd als de site UP is.
+      # Als de website precies om 08:00 herstelt, wordt alleen HERSTELD
+      # verstuurd en niet ook nog een tweede OK-melding.
+      - name: Daily heartbeat
+        if: >-
+          github.event.schedule == '0 8 * * *' &&
+          env.NOW == 'UP' &&
+          env.NOTIFY != 'true'
+        continue-on-error: true
+
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEPLOY }}
+          MONITOR_URL: ${{ env.URL }}
+          UPTIMEROBOT_STATUS: ${{ env.UPT_STATUS }}
+
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+
+          webhook = os.environ.get("DISCORD_WEBHOOK", "").strip()
+
+          if not webhook:
+              raise SystemExit(
+                  "Missing secret: DISCORD_WEBHOOK_DEPLOY"
+              )
+
+
+          monitor_url = os.environ["MONITOR_URL"]
+          uptimerobot_status = os.environ["UPTIMEROBOT_STATUS"]
+
+
+          payload = {
+              "embeds": [
+                  {
+                      "title": "🌐 Website status — OK",
+                      "description": (
+                          "Website is nog steeds online ✅\n"
+                          f"{monitor_url}\n"
+                          f"UptimeRobot status: "
+                          f"{uptimerobot_status}"
+                      ),
+                      "color": 3066993,
+                  }
+              ]
+          }
+
+
+          request = urllib.request.Request(
+              webhook,
+              data=json.dumps(payload).encode("utf-8"),
+              headers={
+                  "Content-Type": "application/json",
+                  "User-Agent": "GitHub-Actions-Website-Monitor",
+              },
+              method="POST",
+          )
+
+          with urllib.request.urlopen(request, timeout=20):
+              pass
+
+          print("Dagelijkse heartbeat verzonden.")
+          PY
+
+      # UNKNOWN wordt hier bewust niet opgeslagen.
+      - name: Persist changed status
+        if: env.SAVE_STATUS == 'true'
+        shell: bash
         run: |
           mkdir -p .status
           echo "${{ env.NOW }}" > .status/last.txt
+
+      - name: Save changed status
+        if: env.SAVE_STATUS == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .status
+          key: website-status-${{ github.run_id }}
