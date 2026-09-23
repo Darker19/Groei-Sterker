@@ -23,6 +23,8 @@ if ($formStart === 0 || time() - $formStart < 4) {
 $naam = trim($_POST["naam"] ?? '');
 $email = trim($_POST["email"] ?? '');
 $telefoon = trim($_POST["telefoon"] ?? '');
+$naamKind = trim($_POST["naam_kind"] ?? '');
+$leeftijdKind = trim($_POST["leeftijd_kind"] ?? '');
 $bericht = trim($_POST["bericht"] ?? '');
 
 if ($naam === "" || $email === "" || $bericht === "") {
@@ -39,7 +41,8 @@ $telefoon = str_replace(["\r", "\n"], ' ', $telefoon);
 
 // Limieten in bytes; ruim boven de maxlength (tekens) in contact.html,
 // zodat letters als é of emoji legitieme berichten niet blokkeren.
-if (strlen($naam) > 400 || strlen($email) > 254 || strlen($telefoon) > 120 || strlen($bericht) > 20000) {
+if (strlen($naam) > 400 || strlen($email) > 254 || strlen($telefoon) > 120 || strlen($bericht) > 20000
+    || strlen($naamKind) > 400 || strlen($leeftijdKind) > 80) {
     http_response_code(400);
     echo "Een of meer velden zijn te lang.";
     exit;
@@ -60,6 +63,10 @@ Naam: $naam
 E-mail: $email
 
 Telefoon: $telefoon
+
+Naam kind: $naamKind
+
+Leeftijd kind: $leeftijdKind
 
 Bericht:
 $bericht
