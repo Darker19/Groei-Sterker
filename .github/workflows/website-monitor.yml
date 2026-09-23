@@ -2,19 +2,11 @@ name: Website monitor (via UptimeRobot)
 
 on:
   schedule:
-    # Iedere 5 minuten, behalve tijdens het uur 08:00
-    - cron: "*/5 0-7,9-23 * * *"
-      timezone: "Europe/Amsterdam"
-
-    # Dagelijkse heartbeat om 08:00 Nederlandse tijd
+    # Dagelijkse check om 08:00 Nederlandse tijd
     - cron: "0 8 * * *"
       timezone: "Europe/Amsterdam"
 
   workflow_dispatch: {}
-
-concurrency:
-  group: website-monitor
-  cancel-in-progress: false
 
 jobs:
   check:
@@ -22,34 +14,6 @@ jobs:
     timeout-minutes: 4
 
     steps:
-      # Alleen de laatst opgeslagen status herstellen.
-      # Er wordt pas een nieuwe cache opgeslagen bij een echte statuswijziging.
-      - name: Restore last status
-        uses: actions/cache/restore@v4
-        with:
-          path: .status
-          key: website-status-${{ github.run_id }}
-          restore-keys: |
-            website-status-
-
-      - name: Read last status
-        shell: bash
-        run: |
-          mkdir -p .status
-
-          if [ -f .status/last.txt ]; then
-            LAST_STATUS="$(cat .status/last.txt)"
-
-            if [ "$LAST_STATUS" != "UP" ] && [ "$LAST_STATUS" != "DOWN" ]; then
-              LAST_STATUS="UNKNOWN"
-            fi
-          else
-            LAST_STATUS="UNKNOWN"
-          fi
-
-          echo "LAST=$LAST_STATUS" >> "$GITHUB_ENV"
-          echo "Vorige status: $LAST_STATUS"
-
       - name: Fetch status from UptimeRobot API
         env:
           UPTIMEROBOT_API_KEY: ${{ secrets.UPTIMEROBOT_API_KEY }}
@@ -214,47 +178,12 @@ jobs:
           print(f"Bericht: {message}")
           PY
 
-      # Bepalen of Discord geïnformeerd moet worden.
-      - name: Determine status transition
-        shell: bash
-        run: |
-          NOTIFY=false
-          SAVE_STATUS=false
-
-          # Alleen UP en DOWN worden opgeslagen.
-          # UNKNOWN is een meetfout en geen websitestatus.
-          if [ "${{ env.NOW }}" != "UNKNOWN" ] && \
-             [ "${{ env.NOW }}" != "${{ env.LAST }}" ]; then
-            SAVE_STATUS=true
-          fi
-
-          # Offline melden.
-          # Dit gebeurt ook wanneer er nog geen vorige status beschikbaar is.
-          if [ "${{ env.NOW }}" = "DOWN" ] && \
-             [ "${{ env.LAST }}" != "DOWN" ]; then
-            NOTIFY=true
-          fi
-
-          # Alleen hersteld melden als de website daarvoor echt DOWN was.
-          if [ "${{ env.NOW }}" = "UP" ] && \
-             [ "${{ env.LAST }}" = "DOWN" ]; then
-            NOTIFY=true
-          fi
-
-          echo "NOTIFY=$NOTIFY" >> "$GITHUB_ENV"
-          echo "SAVE_STATUS=$SAVE_STATUS" >> "$GITHUB_ENV"
-
-          echo "Discord-melding nodig: $NOTIFY"
-          echo "Nieuwe status opslaan: $SAVE_STATUS"
-
-      - name: Notify Discord if state changed
-        if: env.NOTIFY == 'true'
-        continue-on-error: true
-
+      # Stuurt iedere dag een melding, ook als de site offline is of de
+      # status niet opgehaald kon worden.
+      - name: Daily status to Discord
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEPLOY }}
           CURRENT_STATUS: ${{ env.NOW }}
-          LAST_STATUS: ${{ env.LAST }}
           MONITOR_URL: ${{ env.URL }}
           UPTIMEROBOT_STATUS: ${{ env.UPT_STATUS }}
           STATUS_MESSAGE: ${{ env.MSG }}
@@ -275,18 +204,23 @@ jobs:
 
 
           current_status = os.environ["CURRENT_STATUS"]
-          last_status = os.environ["LAST_STATUS"]
           monitor_url = os.environ["MONITOR_URL"]
           uptimerobot_status = os.environ["UPTIMEROBOT_STATUS"]
           status_message = os.environ["STATUS_MESSAGE"]
 
 
-          if current_status == "DOWN":
+          if current_status == "UP":
+              title = "🌐 Website status — OK"
+              summary = "Website is online ✅"
+              color = 3066993
+          elif current_status == "DOWN":
               title = "🌐 Website status — OFFLINE"
+              summary = "Website is offline ❌"
               color = 15158332
           else:
-              title = "🌐 Website status — HERSTELD"
-              color = 3066993
+              title = "🌐 Website status — ONBEKEND"
+              summary = "Status kon niet worden opgehaald ⚠️"
+              color = 15105570
 
 
           payload = {
@@ -294,11 +228,10 @@ jobs:
                   {
                       "title": title,
                       "description": (
+                          f"{summary}\n"
                           f"{monitor_url}\n"
                           f"UptimeRobot status: "
-                          f"{uptimerobot_status} ({status_message})\n"
-                          f"LAST: {last_status} → "
-                          f"NOW: {current_status}"
+                          f"{uptimerobot_status} ({status_message})"
                       ),
                       "color": color,
                   }
@@ -321,84 +254,3 @@ jobs:
 
           print(f"Discord-melding verzonden: {title}")
           PY
-
-      # De heartbeat wordt iedere dag om 08:00 verstuurd als de site UP is.
-      # Als de website precies om 08:00 herstelt, wordt alleen HERSTELD
-      # verstuurd en niet ook nog een tweede OK-melding.
-      - name: Daily heartbeat
-        if: >-
-          github.event.schedule == '0 8 * * *' &&
-          env.NOW == 'UP' &&
-          env.NOTIFY != 'true'
-        continue-on-error: true
-
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEPLOY }}
-          MONITOR_URL: ${{ env.URL }}
-          UPTIMEROBOT_STATUS: ${{ env.UPT_STATUS }}
-
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-          import urllib.request
-
-
-          webhook = os.environ.get("DISCORD_WEBHOOK", "").strip()
-
-          if not webhook:
-              raise SystemExit(
-                  "Missing secret: DISCORD_WEBHOOK_DEPLOY"
-              )
-
-
-          monitor_url = os.environ["MONITOR_URL"]
-          uptimerobot_status = os.environ["UPTIMEROBOT_STATUS"]
-
-
-          payload = {
-              "embeds": [
-                  {
-                      "title": "🌐 Website status — OK",
-                      "description": (
-                          "Website is nog steeds online ✅\n"
-                          f"{monitor_url}\n"
-                          f"UptimeRobot status: "
-                          f"{uptimerobot_status}"
-                      ),
-                      "color": 3066993,
-                  }
-              ]
-          }
-
-
-          request = urllib.request.Request(
-              webhook,
-              data=json.dumps(payload).encode("utf-8"),
-              headers={
-                  "Content-Type": "application/json",
-                  "User-Agent": "GitHub-Actions-Website-Monitor",
-              },
-              method="POST",
-          )
-
-          with urllib.request.urlopen(request, timeout=20):
-              pass
-
-          print("Dagelijkse heartbeat verzonden.")
-          PY
-
-      # UNKNOWN wordt hier bewust niet opgeslagen.
-      - name: Persist changed status
-        if: env.SAVE_STATUS == 'true'
-        shell: bash
-        run: |
-          mkdir -p .status
-          echo "${{ env.NOW }}" > .status/last.txt
-
-      - name: Save changed status
-        if: env.SAVE_STATUS == 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: .status
-          key: website-status-${{ github.run_id }}
