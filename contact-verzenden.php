@@ -31,6 +31,20 @@ if ($naam === "" || $email === "" || $bericht === "") {
     exit;
 }
 
+// Regeleinden verwijderen uit velden die in de mailheaders
+// terechtkomen; voorkomt header-injectie (bijv. een extra "Bcc:" regel).
+$naam = str_replace(["\r", "\n"], ' ', $naam);
+$email = str_replace(["\r", "\n"], '', $email);
+$telefoon = str_replace(["\r", "\n"], ' ', $telefoon);
+
+// Limieten in bytes; ruim boven de maxlength (tekens) in contact.html,
+// zodat letters als é of emoji legitieme berichten niet blokkeren.
+if (strlen($naam) > 400 || strlen($email) > 254 || strlen($telefoon) > 120 || strlen($bericht) > 20000) {
+    http_response_code(400);
+    echo "Een of meer velden zijn te lang.";
+    exit;
+}
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(400);
     echo "Ongeldig e-mailadres.";
@@ -52,7 +66,9 @@ $bericht
 ";
 
 $headers = "From: Groei Sterker <info@groei-sterker.nl>\r\n";
-$headers .= "Reply-To: $naam <$email>\r\n";
+// Tekens die de adresnotatie kunnen breken weghalen uit de weergavenaam.
+$replyNaam = str_replace(['"', '<', '>', ',', ';'], '', $naam);
+$headers .= "Reply-To: \"$replyNaam\" <$email>\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
 if (mail($to, $subject, $message, $headers)) {

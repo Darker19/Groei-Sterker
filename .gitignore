@@ -5,3 +5,9 @@ dist/
 *.map
 .cache/
 .tmp/
+
+# Niet (meer) in git en niet online:
+# oude kopie van de site, Mobirise-backups en ongebruikte 3D-modellen
+Groei-Sterker/
+history/
+assets/models/
