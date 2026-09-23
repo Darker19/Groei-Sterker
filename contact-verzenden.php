@@ -27,7 +27,7 @@ $naamKind = trim($_POST["naam_kind"] ?? '');
 $leeftijdKind = trim($_POST["leeftijd_kind"] ?? '');
 $bericht = trim($_POST["bericht"] ?? '');
 
-if ($naam === "" || $email === "" || $bericht === "") {
+if ($naam === "" || $email === "" || $telefoon === "" || $bericht === "") {
     http_response_code(400);
     echo "Verplichte velden ontbreken.";
     exit;
