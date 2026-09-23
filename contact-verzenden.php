@@ -58,7 +58,7 @@ $to = "info@groei-sterker.nl";
 $subject = "Nieuw bericht via Groei Sterker";
 
 $message = "
-Naam: $naam
+Naam ouder/verzorger: $naam
 
 E-mail: $email
 
