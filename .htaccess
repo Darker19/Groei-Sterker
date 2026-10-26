@@ -1,0 +1,30 @@
+# Altijd https: dit deed Hostnet al, maar zo staat het ook vast in de site zelf
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Eén hoofdadres: zonder www gaat door naar www (zoals de canonical-links in de pagina's)
+  RewriteCond %{HTTP_HOST} ^groei-sterker\.nl$ [NC]
+  RewriteRule ^ https://www.groei-sterker.nl%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Content-Security-Policy "frame-ancestors 'none'"
+</IfModule>
+
+# Interne bestanden niet opvraagbaar: .htaccess en de back-ups daarvan (.htaccess-voor-git-…),
+# en de bestandenlijst van de oude FTP-deploy
+<FilesMatch "^\.ht|^\.ftp-deploy-sync-state\.json$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
