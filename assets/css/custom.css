@@ -1363,3 +1363,8 @@ a:active {
 }
 
 /* Technishe issue eind */
+/* Tarieven: eerste blok als op de pagina Over (tekst over de volle kolombreedte, foto in de tekst) */
+.cid-uThPVKwG6m .content-wrapper .text-wrapper .mbr-text {
+  display: block;
+  width: 100%;
+}
