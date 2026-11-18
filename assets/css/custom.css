@@ -1368,3 +1368,13 @@ a:active {
   display: block;
   width: 100%;
 }
+/* Tarieven: zelfde breedte en afstand tot het menu als het blok op de pagina Over */
+.cid-uThPVKwG6m {
+  padding-top: 125px;
+}
+@media (min-width: 992px) {
+  .cid-uThPVKwG6m > .container-fluid > .row > .col-lg-6 {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
